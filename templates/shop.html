@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mindlock - Rewards Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Fredoka', sans-serif; } </style>
+</head>
+<body class="bg-pink-50 p-8 text-gray-700">
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-pink-100">
+        
+        <!-- Header / Navigation link back -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-pink-400">🎁 Rewards Store</h1>
+            <a href="{{ url_for('home') }}" class="text-pink-500 font-bold hover:underline">← Back to Dashboard</a>
+        </div>
+
+        <!-- Pass Items Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- 2-Hour Study Pass Card -->
+            <div class="border-2 border-pink-200 rounded-2xl p-6 bg-rose-50 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs bg-pink-200 text-pink-700 px-3 py-1 rounded-full font-bold">Max 2 Hours</span>
+                    <h2 class="text-2xl font-bold text-pink-600 mt-2">🎫 Ultimate Study Pass</h2>
+                    <p class="text-sm text-gray-500 mt-1">Unlocks a 120-minute uninterrupted focus session with bonus coin multipliers.</p>
+                </div>
+                <div class="mt-6 flex justify-between items-center">
+                    <span class="text-lg font-bold text-amber-500">🪙 100 Coins</span>
+                    <button class="bg-pink-400 hover:bg-pink-500 text-white font-bold px-5 py-2 rounded-xl transition">
+                        Redeem Pass
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
