@@ -1,0 +1,17 @@
+# Local Flask Database & Instance Folders
+instance/
+*.db
+*.sqlite3
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+
+# Temporary Excel & OS Files
+~$*.xlsx
+.DS_Store
+Thumbs.db
+
+# Virtual Environments
+venv/
+.venv/

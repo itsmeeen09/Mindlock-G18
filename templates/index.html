@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindlock - Study Corner</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Fredoka', cursive, sans-serif; }
+    </style>
+</head>
+<body class="bg-pink-100 text-pink-900 min-h-screen p-6">
+
+    <!-- MAIN CONTAINER CARD -->
+    <div class="max-w-4xl mx-auto bg-white rounded-[35px] p-8 shadow-xl shadow-pink-200 border-4 border-pink-200">
+        
+        <!-- HEADER BAR -->
+        <header class="flex justify-between items-center pb-6 border-b-2 border-pink-100">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🎀</span>
+                <h1 class="text-3xl font-bold text-pink-400">Mindlock</h1>
+            </div>
+            
+            <div class="flex items-center gap-3">
+    <!-- Streak Display -->
+    <div class="bg-rose-50 border border-rose-200 text-rose-500 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm">
+        🔥 5 Days
+    </div>
+
+    <!-- Clickable Shop Link disguised as the Coin Display -->
+    <a href="{{ url_for('shop') }}" class="bg-amber-50 border border-amber-200 text-amber-600 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm hover:bg-amber-100 transition cursor-pointer">
+        🪙 450 Coins
+    </a>
+</div>
+        </header>
+
+        <!-- WELCOME BANNER -->
+        <section class="bg-pink-50 border-2 border-pink-200 rounded-[25px] p-6 my-6 text-center">
+            <span class="text-4xl">🌸</span>
+            <h2 class="text-2xl font-bold text-pink-500 mt-2">Welcome Back, Yasmeen!</h2>
+            <p class="text-pink-400 text-sm mt-1">Ready for a productive study session today?</p>
+            <button class="mt-4 bg-pink-400 hover:bg-pink-500 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform active:scale-95">
+                ⚡ Start 2-Hour Focus Session
+            </button>
+        </section>
+
+        <!-- GRID: STATS & REWARDS STORE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- LEFT: QUICK STATS -->
+            <div class="bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5">
+                <h3 class="text-lg font-bold text-pink-400 mb-4 flex items-center gap-2">
+                    <span>📊</span> Study Stats
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
+                        <p class="text-xs text-pink-300 font-bold">FOCUS TIME</p>
+                        <p class="text-xl font-bold text-pink-500">18.5 Hrs</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
+                        <p class="text-xs text-pink-300 font-bold">ACCURACY</p>
+                        <p class="text-xl font-bold text-pink-500">92%</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
+                        <p class="text-xs text-pink-300 font-bold">BADGES</p>
+                        <p class="text-xl font-bold text-pink-500">4 / 10</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
+                        <p class="text-xs text-pink-300 font-bold">PASSES</p>
+                        <p class="text-xl font-bold text-pink-500">3 Used</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: REWARDS SHOP PREVIEW -->
+            <div class="bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5 space-y-3">
+                <div class="flex justify-between items-center mb-1">
+                    <h3 class="text-lg font-bold text-pink-400 flex items-center gap-2">
+                        <span>🎁</span> Study Rewards
+                    </h3>
+                    <span class="text-[11px] font-bold bg-pink-200 text-pink-600 px-2.5 py-0.5 rounded-full">Max 2 Hrs/Pass</span>
+                </div>
+
+                <!-- PASS ITEM 1 -->
+                <div class="bg-white p-3.5 rounded-2xl border border-pink-100 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-pink-600 text-sm">2-Hour Focus Pass</p>
+                        <p class="text-xs text-amber-500 font-bold">🪙 100 Coins</p>
+                    </div>
+                    <button class="bg-pink-400 hover:bg-pink-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+                        Redeem
+                    </button>
+                </div>
+
+                <!-- PASS ITEM 2 (LOCKED) -->
+                <div class="bg-white/60 p-3.5 rounded-2xl border border-pink-100 flex items-center justify-between opacity-60">
+                    <div>
+                        <p class="font-bold text-pink-600 text-sm">Weekend Break Pass</p>
+                        <p class="text-xs text-amber-500 font-bold">🪙 500 Coins</p>
+                    </div>
+                    <button disabled class="bg-gray-200 text-gray-400 text-xs font-bold px-4 py-2 rounded-xl cursor-not-allowed">
+                        🔒 Locked
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-xs text-pink-300 mt-6 pt-4 border-t border-pink-100">
+            Made with 💕 for Mindlock G-18
+        </footer>
+
+    </div>
+
+</body>
+</html>
