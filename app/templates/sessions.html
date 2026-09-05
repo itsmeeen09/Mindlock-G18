@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Study Sessions</title>
+</head>
+
+<body>
+
+    <h1>My Study Sessions</h1>
+
+    <!-- Display every study session from the database -->
+    {% for session in sessions %}
+    <h2>{{ session.title }}</h2>
+    {% endfor %}
+
+</body>
+
+</html>
