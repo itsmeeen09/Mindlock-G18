@@ -11,7 +11,25 @@
 
     <!-- Display every study session from the database -->
     {% for session in sessions %}
+
     <h2>{{ session.title }}</h2>
+
+    <!-- Display tasks belonging to this study session -->
+    {% if session.tasks %}
+    <ul>
+        {% for task in session.tasks %}
+        <li>{{ task.title }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tasks added yet.</p>
+    {% endif %}
+
+    <!-- Link to add another task -->
+    <a href="{{ url_for('create_task', session_id=session.id) }}">
+        Add Task
+    </a>
+
     {% endfor %}
 
 </body>

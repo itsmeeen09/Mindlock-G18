@@ -1,5 +1,5 @@
 # Importing flask from the flask package, using flask to build the web application.
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 # bringing render tool from flask to display the html instead of text
 
 # Import the database object.
@@ -14,26 +14,24 @@ def create_app():
     # Configure the database location.
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mindlock.db"
 
-# Turn off unnecessary modification tracking.
+    # Turn off unnecessary modification tracking.
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
-# Connect SQLAlchemy to our Flask application.
+    # Connect SQLAlchemy to our Flask application.
     db.init_app(app)
 
-# creating database tables from my models
+    # creating database tables from my models
     with app.app_context():
         db.create_all()
 
-# creating a route for the homepage
-
+    # creating a route for the homepage
     @app.route("/")
     def home():
 
         # return this webpage
         return render_template("index.html")
 
-        # Route for creating a new study session.
+    # Route for creating a new study session.
     @app.route("/sessions/create", methods=["GET", "POST"])
     def create_session():
 
@@ -52,50 +50,48 @@ def create_app():
             # Save the changes to the database.
             db.session.commit()
 
-            # Tell the user the session was created.
-            return "Study session created!"
+            # Send the user to the task creation page.
+            return redirect(url_for("create_task", session_id=session.id))
 
         # If the user has not submitted the form yet,
         # display the creation page.
         return render_template("create_session.html")
 
-        # Route for viewing all study sessions.
+    # Route for viewing all study sessions.
     @app.route("/sessions")
     def view_sessions():
 
-        # Route for creating a task.
-        @app.route("/tasks/create/<int:session_id>", methods=["GET", "POST"])
-        def create_task(session_id):
+        sessions = StudySession.query.all()
 
-            # Find the study session this task belongs to.
-            session = StudySession.query.get_or_404(session_id)
+        return render_template("sessions.html", sessions=sessions)
 
-            # If the user submitted the form...
-            if request.method == "POST":
+    # Route for creating a task.
+    @app.route("/tasks/create/<int:session_id>", methods=["GET", "POST"])
+    def create_task(session_id):
 
-                # Get the task title from the form.
-                title = request.form["title"]
+        # Find the study session this task belongs to.
+        session = StudySession.query.get_or_404(session_id)
 
-                # Create a new task and connect it to the study session.
-                task = Task(title=title, study_session_id=session.id)
+        # If the user submitted the form...
+        if request.method == "POST":
 
-                # Add the task to the database.
-                db.session.add(task)
+            # Get the task title from the form.
+            title = request.form["title"]
 
-                # Save the task.
-                db.session.commit()
+            # Create a new task and connect it to the study session.
+            task = Task(title=title, study_session_id=session.id)
 
-                # Confirm that the task was created.
-                return "Task created!"
+            # Add the new task to the database.
+            db.session.add(task)
 
-            # Display the task creation page.
-            return render_template("create_task.html", session=session)
+            # Save the task.
+            db.session.commit()
 
-            # Get all study sessions from the database.
-            sessions = StudySession.query.all()
+            # Send the user back to the sessions page.
+            return redirect(url_for("view_sessions"))
 
-            # Send the sessions to the HTML page.
-            return render_template("sessions.html", sessions=sessions)
+        # Display the task creation page.
+        return render_template("create_task.html", session=session)
 
-      # return application
+    # return application
     return app
