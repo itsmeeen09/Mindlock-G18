@@ -93,5 +93,31 @@ def create_app():
         # Display the task creation page.
         return render_template("create_task.html", session=session)
 
+        # Route for Focus Mode.
+    @app.route("/sessions/<int:session_id>/focus")
+    def focus_mode(session_id):
+
+        # Find the study session.
+        session = StudySession.query.get_or_404(session_id)
+
+        # Display the Focus Mode page.
+        return render_template("focus_mode.html", session=session)
+
+        # Route for starting a study session.
+    @app.route("/sessions/<int:session_id>/start", methods=["POST"])
+    def start_session(session_id):
+
+        # Find the study session.
+        session = StudySession.query.get_or_404(session_id)
+
+        # Change the session status to active.
+        session.status = "active"
+
+        # Save the change to the database.
+        db.session.commit()
+
+        # Return to Focus Mode.
+        return redirect(url_for("focus_mode", session_id=session.id))
+
     # return application
     return app

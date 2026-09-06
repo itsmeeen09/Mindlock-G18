@@ -29,7 +29,9 @@
     <a href="{{ url_for('create_task', session_id=session.id) }}">
         Add Task
     </a>
-
+    <a href="{{ url_for('focus_mode', session_id=session.id) }}">
+        Focus Mode
+    </a>
     {% endfor %}
 
 </body>

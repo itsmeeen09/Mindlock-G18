@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Focus Mode</title>
+</head>
+
+<body>
+
+    <h1>Focus Mode</h1>
+
+    <h2>{{ session.title }}</h2>
+
+    <div id="timer" data-duration="{{session.duration}}">30:00</div>
+
+
+    <button id="startButton" type="button">Start</button>
+
+
+    <button id="pauseButton">Pause</button>
+    <button id="endButton">End Session</button>
+
+    <p>Status: <span id="status">{{ session.status }}</span></p>
+    <script>
+        const timer = document.getElementById("timer");
+        let timeLeft = Number(timer.dataset.duration) * 60;
+        let timerInterval = null;
+
+        const startButton = document.getElementById("startButton");
+        const pauseButton = document.getElementById("pauseButton");
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            timer.textContent =
+                String(minutes).padStart(2, "0") + ":" +
+                String(seconds).padStart(2, "0");
+        }
+
+        startButton.addEventListener("click", function () {
+            if (timerInterval !== null) {
+                return;
+            }
+
+            fetch("{{ url_for('start_session', session_id=session.id) }}", {
+                method: "POST"
+            });
+
+            timerInterval = setInterval(function () {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimer();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }, 1000);
+        });
+
+        pauseButton.addEventListener("click", function () {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        updateTimer();
+
+        if ("{{session.status}}" == "active") {
+            startButton.click();
+        }
+    </script>
+</body>
+
+</html>

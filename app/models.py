@@ -15,6 +15,15 @@ class StudySession(db.Model):
     # Name/title of the study session.
     title = db.Column(db.String(100), nullable=False)
 
+    # length of thhe study session in minutes
+    duration = db.Column(db.Integer, nullable=False, default=30)
+
+    # Current status of the study session.
+    status = db.Column(db.String(20), nullable=False, default="not_started")
+
+    # Remaining time in seconds
+    remaining_time = db.Column(db.Integer, nullable=False, default=0)
+
     # connect this study session to all of its tasks
     tasks = db.relationship("Task", backref="study_session", lazy=True)
 
