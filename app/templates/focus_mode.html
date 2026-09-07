@@ -11,7 +11,9 @@
 
     <h2>{{ session.title }}</h2>
 
-    <div id="timer" data-duration="{{session.duration}}">30:00</div>
+    <div id="timer" data-duration="{{session.duration}}" data-remaining="{{session.remaining_time}}">
+        30:00
+    </div>
 
 
     <button id="startButton" type="button">Start</button>
@@ -22,12 +24,16 @@
 
     <p>Status: <span id="status">{{ session.status }}</span></p>
     <script>
+
         const timer = document.getElementById("timer");
-        let timeLeft = Number(timer.dataset.duration) * 60;
+        let savedTime = Number(timer.dataset.remaining);
+        let timeLeft = savedTime > 0 ? savedTime : Number(timer.dataset.duration) * 60;
         let timerInterval = null;
 
         const startButton = document.getElementById("startButton");
         const pauseButton = document.getElementById("pauseButton");
+        const status = document.getElementById("status");
+        const endButton = document.getElementById("endButton");
 
         function updateTimer() {
             const minutes = Math.floor(timeLeft / 60);
@@ -46,6 +52,7 @@
             fetch("{{ url_for('start_session', session_id=session.id) }}", {
                 method: "POST"
             });
+            status.textContent = "active";
 
             timerInterval = setInterval(function () {
                 if (timeLeft > 0) {
@@ -61,13 +68,31 @@
         pauseButton.addEventListener("click", function () {
             clearInterval(timerInterval);
             timerInterval = null;
+
+            const formData = new FormData();
+            formData.append("remaining_time", timeLeft);
+
+            fetch("{{ url_for('pause_session', session_id=session.id) }}", {
+                method: "POST",
+                body: formData
+            });
+
+            status.textContent = "paused";
+        });
+
+        endButton.addEventListener("click", function () {
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            fetch("{{ url_for('end_session', session_id=session.id) }}", {
+                method: "POST"
+            });
+
+            status.textContent = "completed";
         });
 
         updateTimer();
 
-        if ("{{session.status}}" == "active") {
-            startButton.click();
-        }
     </script>
 </body>
 

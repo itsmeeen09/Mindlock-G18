@@ -41,8 +41,14 @@ def create_app():
             # Get the session title from the form.
             title = request.form["title"]
 
+            # get the duration from the form
+            duration = request.form["duration"]
+
             # Create a new StudySession object.
-            session = StudySession(title=title)
+            session = StudySession(
+                title=title,
+                duration=int(duration)
+            )
 
             # Add the new session to the database.
             db.session.add(session)
@@ -119,5 +125,29 @@ def create_app():
         # Return to Focus Mode.
         return redirect(url_for("focus_mode", session_id=session.id))
 
+    # Route for pausing a study session.
+    @app.route("/sessions/<int:session_id>/pause", methods=["POST"])
+    def pause_session(session_id):
+        session = StudySession.query.get_or_404(session_id)
+
+        remaining_time = request.form.get("remaining_time", type=int)
+
+        session.status = "paused"
+        session.remaining_time = remaining_time
+
+        db.session.commit()
+        return redirect(url_for("focus_mode", session_id=session.id))
+
+    # Route for ending a study session.
+    @app.route("/sessions/<int:session_id>/end", methods=["POST"])
+    def end_session(session_id):
+        session = StudySession.query.get_or_404(session_id)
+
+        session.status = "completed"
+        session.remaining_time = 0
+
+        db.session.commit()
+
+        return redirect(url_for("view_sessions"))
     # return application
     return app

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Create Study Session</title>
 </head>
@@ -18,10 +19,28 @@
         <!-- Input where the user enters the session title -->
         <input type="text" id="title" name="title" required>
 
+        <br><br>
+
+        <!-- Label for the session duration -->
+        <label for="duration">Session Duration:</label>
+
+        <!-- Dropdown where the user chooses how long to study -->
+        <select id="duration" name="duration" required>
+            <option value="15">15 minutes</option>
+            <option value="30" selected>30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="90">90 minutes</option>
+            <option value="120">120 minutes</option>
+        </select>
+
+        <br><br>
+
         <!-- Button to submit the form -->
         <button type="submit">Create Session</button>
 
     </form>
 
 </body>
+
 </html>
