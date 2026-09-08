@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Tasks</title>
+</head>
+
+<body>
+
+    <h1>My Tasks</h1>
+
+    {% for session in sessions %}
+
+    <h2>{{ session.title }}</h2>
+
+    <p>Progress: {{ "%.2f"|format(session.progress) }}% completed</p>
+
+    {% if session.tasks %}
+
+    <h3>Upcoming</h3>
+
+    {% for task in session.tasks %}
+    {% if task.status == "upcoming" %}
+    <p>
+        {{ task.title }}
+
+    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
+        <button type="submit">Start Task</button>
+    </form>
+    </p>
+    {% endif %}
+    {% endfor %}
+
+
+    <h3>Ongoing</h3>
+
+    {% for task in session.tasks %}
+    {% if task.status == "ongoing" %}
+    <p>
+        {{ task.title }}
+
+    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='completed') }}">
+        <button type="submit">Complete Task</button>
+    </form>
+    </p>
+    {% endif %}
+    {% endfor %}
+
+
+    <h3>Completed</h3>
+
+    {% for task in session.tasks %}
+    {% if task.status == "completed" %}
+    <p>{{ task.title }}</p>
+    {% endif %}
+    {% endfor %}
+
+    {% else %}
+
+    <p>No tasks for this session.</p>
+
+    {% endif %}
+
+    {% else %}
+
+    <p>No study sessions created yet.</p>
+
+    {% endfor %}
+
+</body>
+
+</html>

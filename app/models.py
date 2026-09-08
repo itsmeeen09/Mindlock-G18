@@ -41,6 +41,9 @@ class Task(db.Model):
     # Stores whether the task has been completed.
     completed = db.Column(db.Boolean, default=False)
 
+    # Stores the current status of the task.
+    status = db.Column(db.String(20), nullable=False, default="upcoming")
+
     # Stores the ID of the study session this task belongs to.
     study_session_id = db.Column(db.Integer, db.ForeignKey(
         "study_session.id"), nullable=False)

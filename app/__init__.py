@@ -149,5 +149,48 @@ def create_app():
         db.session.commit()
 
         return redirect(url_for("view_sessions"))
+        # Route for viewing all tasks.
+
+    @app.route("/tasks")
+    def view_tasks():
+
+        sessions = StudySession.query.all()
+
+        # Calculate completion percentage for each session.
+        for session in sessions:
+
+            total_tasks = len(session.tasks)
+
+            completed_tasks = sum(
+                1 for task in session.tasks
+                if task.status == "completed"
+            )
+
+            if total_tasks > 0:
+                session.progress = (completed_tasks / total_tasks) * 100
+            else:
+                session.progress = 0
+
+        return render_template("tasks.html", sessions=sessions)
+
+ # Route for changing a task's status.
+
+    @app.route("/tasks/<int:task_id>/status/<status>", methods=["POST"])
+    def update_task_status(task_id, status):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Update the task status.
+        task.status = status
+
+        # Keep the completed field in sync.
+        task.completed = status == "completed"
+
+        # Save the change.
+        db.session.commit()
+
+        # Return to the My Tasks page.
+        return redirect(url_for("view_tasks"))
     # return application
     return app
