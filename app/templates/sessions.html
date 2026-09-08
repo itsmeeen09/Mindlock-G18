@@ -3,36 +3,59 @@
 
 <head>
     <title>My Study Sessions</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>My Study Sessions</h1>
+    <main class="sessions-container">
 
-    <!-- Display every study session from the database -->
-    {% for session in sessions %}
+        <h1>My Study Sessions</h1>
 
-    <h2>{{ session.title }}</h2>
+        {% for session in sessions %}
 
-    <!-- Display tasks belonging to this study session -->
-    {% if session.tasks %}
-    <ul>
-        {% for task in session.tasks %}
-        <li>{{ task.title }}</li>
+        <section class="session-card">
+
+            <h2>{{ session.title }}</h2>
+
+            {% if session.tasks %}
+
+            <ul class="session-tasks">
+
+                {% for task in session.tasks %}
+                <li>{{ task.title }}</li>
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>No tasks added yet.</p>
+
+            {% endif %}
+
+            <div class="session-actions">
+
+                <a href="{{ url_for('create_task', session_id=session.id) }}">
+                    <button type="button">Add Task</button>
+                </a>
+
+                <a href="{{ url_for('focus_mode', session_id=session.id) }}">
+                    <button type="button">Start Focus Mode</button>
+                </a>
+
+            </div>
+
+        </section>
+
+        {% else %}
+
+        <p>No study sessions created yet.</p>
+
         {% endfor %}
-    </ul>
-    {% else %}
-    <p>No tasks added yet.</p>
-    {% endif %}
 
-    <!-- Link to add another task -->
-    <a href="{{ url_for('create_task', session_id=session.id) }}">
-        Add Task
-    </a>
-    <a href="{{ url_for('focus_mode', session_id=session.id) }}">
-        Focus Mode
-    </a>
-    {% endfor %}
+    </main>
 
 </body>
 

@@ -3,28 +3,34 @@
 
 <head>
     <title>Create Task</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>Create a Task</h1>
+    <main class="form-container">
 
-    <p>Study Session: {{ session.title }}</p>
+        <h1>Create a Task</h1>
 
-    <form method="POST">
+        <p>Study Session: {{ session.title }}</p>
 
-        <label for="title">Task:</label>
+        <form method="POST">
 
-        <input type="text" id="title" name="title" required>
+            <label for="title">Task:</label>
 
-        <button type="submit">Add Task</button>
+            <input type="text" id="title" name="title" required>
 
-    </form>
-    <br>
+            <button type="submit">Add Task</button>
 
-    <a href="{{ url_for('view_tasks') }}">
-        <button type="button">View All Tasks</button>
-    </a>
+        </form>
+
+        <a href="{{ url_for('view_tasks') }}">
+            <button type="button">View All Tasks</button>
+        </a>
+
+    </main>
+
 </body>
 
 </html>

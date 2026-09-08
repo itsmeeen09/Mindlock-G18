@@ -3,26 +3,43 @@
 
 <head>
     <title>Focus Mode</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>Focus Mode</h1>
+    <main class="focus-container">
 
-    <h2>{{ session.title }}</h2>
+        <p class="focus-label">FOCUS MODE</p>
 
-    <div id="timer" data-duration="{{session.duration}}" data-remaining="{{session.remaining_time}}">
-        30:00
-    </div>
+        <h1>{{ session.title }}</h1>
 
+        <div id="timer" class="focus-timer" data-duration="{{ session.duration }}"
+            data-remaining="{{ session.remaining_time }}">
+            30:00
+        </div>
 
-    <button id="startButton" type="button">Start</button>
+        <p class="focus-status">
+            Status: <span id="status">{{ session.status }}</span>
+        </p>
 
+        <div class="focus-actions">
 
-    <button id="pauseButton">Pause</button>
-    <button id="endButton">End Session</button>
+            <button id="startButton" type="button">Start</button>
 
-    <p>Status: <span id="status">{{ session.status }}</span></p>
+            <button id="pauseButton" type="button">Pause</button>
+
+            <button id="endButton" type="button">End Session</button>
+
+        </div>
+
+        <a class="tasks-link" href="{{ url_for('view_tasks') }}">
+            View My Tasks
+        </a>
+
+    </main>
+
     <script>
 
         const timer = document.getElementById("timer");
@@ -52,6 +69,7 @@
             fetch("{{ url_for('start_session', session_id=session.id) }}", {
                 method: "POST"
             });
+
             status.textContent = "active";
 
             timerInterval = setInterval(function () {
@@ -94,6 +112,7 @@
         updateTimer();
 
     </script>
+
 </body>
 
 </html>

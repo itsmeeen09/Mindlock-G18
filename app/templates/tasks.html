@@ -3,69 +3,106 @@
 
 <head>
     <title>My Tasks</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>My Tasks</h1>
+    <main class="tasks-container">
 
-    {% for session in sessions %}
+        <h1>My Tasks</h1>
 
-    <h2>{{ session.title }}</h2>
+        {% for session in sessions %}
 
-    <p>Progress: {{ "%.2f"|format(session.progress) }}% completed</p>
+        <section class="task-session">
 
-    {% if session.tasks %}
+            <h2>{{ session.title }}</h2>
 
-    <h3>Upcoming</h3>
+            <p class="progress-text">
+                Progress: {{ "%.2f"|format(session.progress) }}% completed
+            </p>
 
-    {% for task in session.tasks %}
-    {% if task.status == "upcoming" %}
-    <p>
-        {{ task.title }}
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ session.progress }}%;"></div>
+            </div>
 
-    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
-        <button type="submit">Start Task</button>
-    </form>
-    </p>
-    {% endif %}
-    {% endfor %}
+            {% if session.tasks %}
+
+            <div class="task-section">
+
+                <h3>Upcoming</h3>
+
+                {% for task in session.tasks %}
+                {% if task.status == "upcoming" %}
+
+                <div class="task-item">
+                    <span>{{ task.title }}</span>
+
+                    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
+                        <button type="submit">Start Task</button>
+                    </form>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
 
 
-    <h3>Ongoing</h3>
+            <div class="task-section">
 
-    {% for task in session.tasks %}
-    {% if task.status == "ongoing" %}
-    <p>
-        {{ task.title }}
+                <h3>Ongoing</h3>
 
-    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='completed') }}">
-        <button type="submit">Complete Task</button>
-    </form>
-    </p>
-    {% endif %}
-    {% endfor %}
+                {% for task in session.tasks %}
+                {% if task.status == "ongoing" %}
+
+                <div class="task-item">
+                    <span>{{ task.title }}</span>
+
+                    <form method="POST"
+                        action="{{ url_for('update_task_status', task_id=task.id, status='completed') }}">
+                        <button type="submit">Complete Task</button>
+                    </form>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
 
 
-    <h3>Completed</h3>
+            <div class="task-section">
 
-    {% for task in session.tasks %}
-    {% if task.status == "completed" %}
-    <p>{{ task.title }}</p>
-    {% endif %}
-    {% endfor %}
+                <h3>Completed</h3>
 
-    {% else %}
+                {% for task in session.tasks %}
+                {% if task.status == "completed" %}
 
-    <p>No tasks for this session.</p>
+                <div class="task-item completed-task">
+                    <span>{{ task.title }}</span>
+                </div>
 
-    {% endif %}
+                {% endif %}
+                {% endfor %}
 
-    {% else %}
+            </div>
 
-    <p>No study sessions created yet.</p>
+            {% else %}
 
-    {% endfor %}
+            <p>No tasks for this session.</p>
+
+            {% endif %}
+
+        </section>
+
+        {% else %}
+
+        <p>No study sessions created yet.</p>
+
+        {% endfor %}
+
+    </main>
 
 </body>
 
