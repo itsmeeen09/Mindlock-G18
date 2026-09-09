@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindlock - Focus & Break 🌸</title>
+    <style>
+        body { 
+            font-family: 'Nunito', 'Segoe UI', sans-serif; 
+            background: #fff0f5; 
+            color: #5c4b51; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            transition: background 0.3s;
+        }
+
+        /* Soft green theme background when in Break Mode */
+        body.break-mode {
+            background: #f0f7f4;
+        }
+
+        .timer-card { 
+            background: #ffffff; 
+            padding: 35px 30px; 
+            border-radius: 28px; 
+            text-align: center; 
+            box-shadow: 0 10px 25px rgba(220, 180, 200, 0.3); 
+            width: 340px; 
+            border: 3px solid #fce4ec;
+            transition: border-color 0.3s;
+        }
+
+        body.break-mode .timer-card {
+            border-color: #c8e6c9;
+            box-shadow: 0 10px 25px rgba(200, 230, 201, 0.4);
+        }
+
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            background: #f4f9f4;
+            border: 2px solid #e0e0e0;
+            color: #888;
+            padding: 8px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .mode-btn.active-focus {
+            background: #ffaaa5;
+            color: #fff;
+            border-color: #ffaaa5;
+        }
+
+        .mode-btn.active-break {
+            background: #a8e6cf;
+            color: #2d5a42;
+            border-color: #a8e6cf;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #886076;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .preset-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .preset-btn {
+            background: #f4f9f4;
+            border: 2px solid #c8e6c9;
+            color: #5c4b51;
+            padding: 6px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: #a8e6cf;
+            color: #2d5a42;
+            border-color: #a8e6cf;
+        }
+
+        .timer-display { 
+            font-size: 58px; 
+            font-weight: 800; 
+            margin: 15px 0; 
+            color: #7b886f;
+            background: #f4f9f4;
+            padding: 15px 0;
+            border-radius: 20px;
+            border: 2px dashed #c8e6c9;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn { 
+            background: #a8e6cf; 
+            color: #2d5a42; 
+            border: none; 
+            padding: 12px 22px; 
+            font-size: 16px; 
+            font-weight: bold;
+            border-radius: 18px; 
+            cursor: pointer; 
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(168, 230, 207, 0.4);
+        }
+
+        .btn:hover { 
+            background: #8de0c2;
+            transform: translateY(-2px);
+        }
+
+        .btn-end { 
+            background: #ffaaa5; 
+            color: #6b2d29;
+            box-shadow: 0 4px 10px rgba(255, 170, 165, 0.4);
+        }
+
+        .btn-end:hover { 
+            background: #ff8b85; 
+        }
+
+        .back-link { 
+            color: #b5838d; 
+            text-decoration: none; 
+            margin-top: 25px; 
+            display: inline-block; 
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timer-card" data-has-pass="{{ 'true' if has_2hr_pass else 'false' }}">
+        <!-- Mode Selector -->
+        <div class="mode-toggle">
+            <button id="focus-tab" class="mode-btn active-focus" onclick="switchMode('focus')">Focus 🧠</button>
+            <button id="break-tab" class="mode-btn" onclick="switchMode('break')">Break ☕</button>
+        </div>
+
+        <h3 id="session-title">✨ Start Focus Session ✨</h3>
+        
+        <!-- Presets -->
+        <div class="preset-group" id="preset-container">
+            <button class="preset-btn active" onclick="setDuration(25, this)">25 min</button>
+            <button class="preset-btn" onclick="setDuration(60, this)">1 hr</button>
+            <button class="preset-btn" onclick="setDuration(120, this)">2 hrs</button>
+        </div>
+
+        <div class="timer-display" id="timer">25:00</div>
+        
+        <div class="btn-group">
+            <button class="btn" onclick="startTimer()">Start 🌸</button>
+            <button class="btn btn-end" onclick="finishSession()">Complete 🎉</button>
+        </div>
+        <a href="/" class="back-link">← Return to Dashboard</a>
+    </div>
+
+<script>
+    // Read the lock status safely from the HTML card element
+    const timerCard = document.querySelector('.timer-card');
+    const has2HrPass = timerCard ? timerCard.dataset.hasPass === 'true' : false;
+
+    let currentMode = 'focus'; 
+    let selectedFocusMinutes = 25;
+    let selectedBreakMinutes = 5;
+    let secondsLeft = selectedFocusMinutes * 60;
+    let timerInterval = null;
+
+    function updateDisplay() {
+        let m = Math.floor(secondsLeft / 60);
+        let s = secondsLeft % 60;
+        document.getElementById('timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function calculateBreakTime(focusMins) {
+        if (focusMins <= 25) return 5;
+        if (focusMins <= 60) return 15;
+        return 30;
+    }
+
+    function renderPresets() {
+        const container = document.getElementById('preset-container');
+        if (currentMode === 'focus') {
+            container.innerHTML = `
+                <button class="preset-btn ${selectedFocusMinutes === 25 ? 'active' : ''}" onclick="setDuration(25, this)">25 min</button>
+                <button class="preset-btn ${selectedFocusMinutes === 60 ? 'active' : ''}" onclick="setDuration(60, this)">1 hr</button>
+                <button class="preset-btn ${selectedFocusMinutes === 120 ? 'active' : ''} ${!has2HrPass ? 'locked' : ''}" 
+                        onclick="select2HrPreset(this)">
+                    ${has2HrPass ? '2 hrs' : '🔒 2 hrs'}
+                </button>
+            `;
+        } else {
+            container.innerHTML = `
+                <button class="preset-btn ${selectedBreakMinutes === 5 ? 'active' : ''}" onclick="setDuration(5, this)">5 min</button>
+                <button class="preset-btn ${selectedBreakMinutes === 15 ? 'active' : ''}" onclick="setDuration(15, this)">15 min</button>
+                <button class="preset-btn ${selectedBreakMinutes === 30 ? 'active' : ''}" onclick="setDuration(30, this)">30 min</button>
+            `;
+        }
+    }
+
+    function select2HrPreset(btnElement) {
+        if (!has2HrPass) {
+            alert("🔒 The 2-Hour Focus Session is locked!\n\nRedeem a Study Pass in the Shop to unlock this option! 🌸");
+            return;
+        }
+        setDuration(120, btnElement);
+    }
+
+    function setDuration(minutes, btnElement) {
+        if (timerInterval) return;
+
+        if (currentMode === 'focus') {
+            selectedFocusMinutes = minutes;
+            selectedBreakMinutes = calculateBreakTime(minutes);
+            secondsLeft = selectedFocusMinutes * 60;
+        } else {
+            selectedBreakMinutes = minutes;
+            secondsLeft = selectedBreakMinutes * 60;
+        }
+
+        updateDisplay();
+        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+    }
+
+    function switchMode(mode) {
+        if (timerInterval) return;
+        currentMode = mode;
+
+        const focusTab = document.getElementById('focus-tab');
+        const breakTab = document.getElementById('break-tab');
+        const title = document.getElementById('session-title');
+        const body = document.body;
+
+        if (mode === 'focus') {
+            focusTab.className = 'mode-btn active-focus';
+            breakTab.className = 'mode-btn';
+            title.textContent = '✨ Cozy Focus Session ✨';
+            body.classList.remove('break-mode');
+            secondsLeft = selectedFocusMinutes * 60;
+        } else {
+            breakTab.className = 'mode-btn active-break';
+            focusTab.className = 'mode-btn';
+            title.textContent = '☕ Rest & Chill 🌿';
+            body.classList.add('break-mode');
+            secondsLeft = selectedBreakMinutes * 60;
+        }
+
+        renderPresets();
+        updateDisplay();
+    }
+
+    function startTimer() {
+        if (timerInterval) return;
+        timerInterval = setInterval(() => {
+            if (secondsLeft > 0) {
+                secondsLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(timerInterval);
+                finishSession();
+            }
+        }, 1000);
+    }
+
+    function finishSession() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        if (currentMode === 'focus') {
+            fetch('/api/earn-coins', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ duration_minutes: selectedFocusMinutes, task_completed: true })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(`Focus completed! 🌸 You earned ${data.coins_earned} FocusCoins! 🪙\n\nStarting your ${selectedBreakMinutes}-minute break now ☕`);
+                switchMode('break');
+            });
+        } else {
+            alert(`Break is over! 🌿 Ready to jump back into another focus session? 🌸`);
+            switchMode('focus');
+        }
+    }
+</script>
+</body>
+</html>

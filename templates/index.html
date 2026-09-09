@@ -12,7 +12,7 @@
         body { font-family: 'Fredoka', cursive, sans-serif; }
     </style>
 </head>
-<body class="bg-pink-100 text-pink-900 min-h-screen p-6">
+<body class="{% if current_user.is_authenticated and current_user.theme == 'matcha' %}bg-emerald-50 text-emerald-900{% elif current_user.is_authenticated and current_user.theme == 'lavender' %}bg-purple-50 text-purple-900{% else %}bg-pink-100 text-pink-900{% endif %} min-h-screen p-6">
 
     <!-- MAIN CONTAINER CARD -->
     <div class="max-w-4xl mx-auto bg-white rounded-[35px] p-8 shadow-xl shadow-pink-200 border-4 border-pink-200">
@@ -40,34 +40,38 @@
         <!-- WELCOME BANNER -->
         <section class="bg-pink-50 border-2 border-pink-200 rounded-[25px] p-6 my-6 text-center">
             <span class="text-4xl">🌸</span>
-            <h2 class="text-2xl font-bold text-pink-500 mt-2">Welcome Back, Yasmeen!</h2>
+            <h1 class="text-3xl font-bold text-pink-400">
+    Welcome Back, {{ current_user.username if current_user.is_authenticated else 'Guest' }}! 🌸
+</h1>
             <p class="text-pink-400 text-sm mt-1">Ready for a productive study session today?</p>
-            <button class="mt-4 bg-pink-400 hover:bg-pink-500 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform active:scale-95">
-                ⚡ Start 2-Hour Focus Session
-            </button>
+            <a href="/timer" class="inline-block mt-4 bg-pink-400 hover:bg-pink-500 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform active:scale-95">
+    ⚡ Start Focus Session
+</a>
         </section>
-
-        <!-- GRID: STATS & REWARDS STORE -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- LEFT: QUICK STATS -->
-            <div class="bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5">
-                <h3 class="text-lg font-bold text-pink-400 mb-4 flex items-center gap-2">
-                    <span>📊</span> Study Stats
-                </h3>
-                <div class="grid grid-cols-2 gap-3 text-center">
-                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
-                        <p class="text-xs text-pink-300 font-bold">FOCUS TIME</p>
-                        <p class="text-xl font-bold text-pink-500">18.5 Hrs</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
-                        <p class="text-xs text-pink-300 font-bold">ACCURACY</p>
-                        <p class="text-xl font-bold text-pink-500">92%</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
-                        <p class="text-xs text-pink-300 font-bold">BADGES</p>
-                        <p class="text-xl font-bold text-pink-500">4 / 10</p>
-                    </div>
+<!-- LEFT: QUICK STATS (CLICKABLE) -->
+<a href="{{ url_for('stats') }}" class="block bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5 hover:border-pink-300 hover:shadow-md transition cursor-pointer no-underline">
+    <h3 class="text-lg font-bold text-pink-400 mb-4 flex items-center gap-2">
+        <span>📊</span> Study Stats
+    </h3>
+    <div class="grid grid-cols-2 gap-3 text-center">
+        <div class="bg-white p-3 rounded-2xl border border-pink-100">
+            <p class="text-xs text-pink-300 font-bold">FOCUS TIME</p>
+            <p class="text-xl font-bold text-pink-500">18.5 Hrs</p>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-pink-100">
+            <p class="text-xs text-pink-300 font-bold">ACCURACY</p>
+            <p class="text-xl font-bold text-pink-500">92%</p>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-pink-100">
+            <p class="text-xs text-pink-300 font-bold">BADGES</p>
+            <p class="text-xl font-bold text-pink-500">4 / 10</p>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-pink-100">
+            <p class="text-xs text-pink-300 font-bold">PASSES</p>
+            <p class="text-xl font-bold text-pink-500">3 Used</p>
+        </div>
+    </div>
+</a>
                     <div class="bg-white p-3 rounded-2xl border border-pink-100">
                         <p class="text-xs text-pink-300 font-bold">PASSES</p>
                         <p class="text-xl font-bold text-pink-500">3 Used</p>

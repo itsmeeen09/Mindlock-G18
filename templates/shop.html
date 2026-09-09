@@ -18,23 +18,78 @@
 
         <!-- Pass Items Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- 2-Hour Study Pass Card -->
-            <div class="border-2 border-pink-200 rounded-2xl p-6 bg-rose-50 flex flex-col justify-between">
-                <div>
-                    <span class="text-xs bg-pink-200 text-pink-700 px-3 py-1 rounded-full font-bold">Max 2 Hours</span>
-                    <h2 class="text-2xl font-bold text-pink-600 mt-2">🎫 Ultimate Study Pass</h2>
-                    <p class="text-sm text-gray-500 mt-1">Unlocks a 120-minute uninterrupted focus session with bonus coin multipliers.</p>
-                </div>
-                <div class="mt-6 flex justify-between items-center">
-                    <span class="text-lg font-bold text-amber-500">🪙 100 Coins</span>
-                    <button class="bg-pink-400 hover:bg-pink-500 text-white font-bold px-5 py-2 rounded-xl transition">
-                        Redeem Pass
-                    </button>
+            <!-- Inside <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> -->
+
+<!-- 2-Hour Study Pass Card -->
+<div class="border-2 border-pink-200 rounded-2xl p-6 bg-rose-50 flex flex-col justify-between">
+    <div>
+        <span class="text-xs bg-pink-200 text-pink-700 px-3 py-1 rounded-full font-bold">Max 2 Hours</span>
+        <h2 class="text-2xl font-bold text-pink-600 mt-2">🎫 Ultimate Study Pass</h2>
+        <p class="text-sm text-gray-500 mt-1">Unlocks a 120-minute uninterrupted focus session with bonus coin multipliers.</p>
+    </div>
+    <div class="mt-6 flex justify-between items-center">
+        <span class="text-lg font-bold text-amber-500">🪙 100 Coins</span>
+        <button onclick="buy2HrPass()" class="bg-pink-400 hover:bg-pink-500 text-white font-bold px-5 py-2 rounded-xl transition">
+            Redeem Pass
+        </button>
+    </div>
+</div>
+
+<!-- Custom Themes Card -->
+<div class="border-2 border-purple-200 rounded-2xl p-6 bg-purple-50 flex flex-col justify-between">
+    <div>
+        <span class="text-xs bg-purple-200 text-purple-700 px-3 py-1 rounded-full font-bold">Customization</span>
+        <h2 class="text-2xl font-bold text-purple-600 mt-2">🎨 Cozy Theme Pack</h2>
+        <p class="text-sm text-gray-500 mt-1">Unlock custom color themes (Matcha Green & Lavender Dreams) for your app!</p>
+    </div>
+    <div class="mt-6 flex justify-between items-center">
+        <span class="text-lg font-bold text-amber-500">🪙 150 Coins</span>
+        {% if current_user.has_custom_themes %}
+            <span class="text-purple-600 font-bold bg-purple-100 px-4 py-2 rounded-xl">Unlocked ✨</span>
+        {% else %}
+            <button onclick="buyThemePack()" class="bg-purple-400 hover:bg-purple-500 text-white font-bold px-5 py-2 rounded-xl transition">
+                Unlock Themes
+            </button>
+        {% endif %}
+    </div>
+</div>
                 </div>
             </div>
 
         </div>
     </div>
+    <script>
+        function buyThemePack() {
+    fetch('/api/buy-theme-pack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) location.reload();
+    })
+    .catch(err => console.error(err));
+}
+        function buy2HrPass() {
+            fetch('/api/redeem-2hr-pass', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json().then(data => ({ status: res.status, body: data })))
+            .then(res => {
+                if (res.status === 200) {
+                    alert(res.body.message || "2-Hour Focus Pass unlocked! 🌸");
+                    location.reload(); // Refresh to update unlocked state / coin counts
+                } else {
+                    alert(res.body.message || "Failed to redeem pass.");
+                }
+            })
+            .catch(err => {
+                console.error("Error redeeming pass:", err);
+                alert("Something went wrong. Please try again! 🌸");
+            });
+        }
+    </script>
 </body>
 </html>

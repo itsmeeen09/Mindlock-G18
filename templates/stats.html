@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindlock - Your Stats 📊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Fredoka', sans-serif; } </style>
+</head>
+<body class="bg-pink-50 p-8 text-gray-700 min-h-screen">
+    <div class="max-w-3xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-pink-100">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-pink-400">📊 Focus Statistics</h1>
+            <a href="{{ url_for('home') }}" class="text-pink-500 font-bold hover:underline">← Dashboard</a>
+        </div>
+
+        <!-- Summary Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div class="bg-rose-50 border border-pink-200 rounded-2xl p-5 text-center">
+                <span class="text-sm font-bold text-pink-400">Current Balance</span>
+                <p class="text-3xl font-bold text-amber-500 mt-1">🪙 {{ current_user.coins }}</p>
+            </div>
+            
+            <div class="bg-purple-50 border border-purple-200 rounded-2xl p-5 text-center">
+                <span class="text-sm font-bold text-purple-400">Total Coins Earned</span>
+                <p class="text-3xl font-bold text-purple-600 mt-1">✨ {{ total_earned }}</p>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
+                <span class="text-sm font-bold text-emerald-500">Sessions Finished</span>
+                <p class="text-3xl font-bold text-emerald-600 mt-1">🎉 {{ total_sessions }}</p>
+            </div>
+        </div>
+
+        <!-- Session History Log -->
+        <h2 class="text-xl font-bold text-gray-700 mb-4">📜 Recent Sessions</h2>
+        <div class="space-y-3">
+            {% if logs %}
+                {% for log in logs|reverse %}
+                <div class="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-xl">
+                    <div>
+                        <p class="font-bold text-gray-700">{{ log.reason }}</p>
+                    </div>
+                    <span class="text-amber-500 font-bold bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg">
+                        +{{ log.amount }} Coins 🪙
+                    </span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-400 text-center py-6">No completed sessions yet! Start the timer to earn your first coins. 🌸</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>
