@@ -32,11 +32,28 @@
             width: 340px; 
             border: 3px solid #fce4ec;
             transition: border-color 0.3s;
+            position: relative;
         }
 
         body.break-mode .timer-card {
             border-color: #c8e6c9;
             box-shadow: 0 10px 25px rgba(200, 230, 201, 0.4);
+        }
+
+        /* Streak Badge Style */
+        .streak-badge {
+            background: #fffbea;
+            border: 2px solid #fde68a;
+            color: #d97706;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
         }
 
         .mode-toggle {
@@ -81,6 +98,7 @@
             justify-content: center;
             gap: 8px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .preset-btn {
@@ -99,6 +117,18 @@
             background: #a8e6cf;
             color: #2d5a42;
             border-color: #a8e6cf;
+        }
+
+        .demo-btn {
+            background: #fef3c7;
+            border: 2px solid #fde68a;
+            color: #b45309;
+        }
+
+        .demo-btn:hover, .demo-btn.active {
+            background: #f59e0b;
+            color: #ffffff;
+            border-color: #d97706;
         }
 
         .timer-display { 
@@ -161,6 +191,12 @@
 <body>
 
     <div class="timer-card" data-has-pass="{{ 'true' if has_2hr_pass else 'false' }}">
+        
+        <!-- 🔥 Streak Display Badge -->
+        <div class="streak-badge">
+            🔥 <span id="streak-count">{{ current_user.streak_info.current_streak if current_user.streak_info else 0 }}</span> Day Streak
+        </div>
+
         <!-- Mode Selector -->
         <div class="mode-toggle">
             <button id="focus-tab" class="mode-btn active-focus" onclick="switchMode('focus')">Focus 🧠</button>
@@ -171,12 +207,13 @@
         
         <!-- Presets -->
         <div class="preset-group" id="preset-container">
+            <button class="preset-btn demo-btn" onclick="setSecondsDuration(5, this)">⚡ 5s Demo</button>
             <button class="preset-btn active" onclick="setDuration(25, this)">25 min</button>
             <button class="preset-btn" onclick="setDuration(60, this)">1 hr</button>
             <button class="preset-btn" onclick="setDuration(120, this)">2 hrs</button>
         </div>
 
-        <div class="timer-display" id="timer">25:00</div>
+        <div class="timer-display" id="timer">00:05</div>
         
         <div class="btn-group">
             <button class="btn" onclick="startTimer()">Start 🌸</button>
@@ -186,14 +223,14 @@
     </div>
 
 <script>
-    // Read the lock status safely from the HTML card element
+    // Read lock status safely from HTML data attribute
     const timerCard = document.querySelector('.timer-card');
     const has2HrPass = timerCard ? timerCard.dataset.hasPass === 'true' : false;
 
     let currentMode = 'focus'; 
-    let selectedFocusMinutes = 25;
-    let selectedBreakMinutes = 5;
-    let secondsLeft = selectedFocusMinutes * 60;
+    let isDemoMode = true;
+    let totalSeconds = 5;
+    let secondsLeft = 5;
     let timerInterval = null;
 
     function updateDisplay() {
@@ -212,18 +249,19 @@
         const container = document.getElementById('preset-container');
         if (currentMode === 'focus') {
             container.innerHTML = `
-                <button class="preset-btn ${selectedFocusMinutes === 25 ? 'active' : ''}" onclick="setDuration(25, this)">25 min</button>
-                <button class="preset-btn ${selectedFocusMinutes === 60 ? 'active' : ''}" onclick="setDuration(60, this)">1 hr</button>
-                <button class="preset-btn ${selectedFocusMinutes === 120 ? 'active' : ''} ${!has2HrPass ? 'locked' : ''}" 
+                <button class="preset-btn demo-btn ${isDemoMode ? 'active' : ''}" onclick="setSecondsDuration(5, this)">⚡ 5s Demo</button>
+                <button class="preset-btn ${!isDemoMode && totalSeconds === 1500 ? 'active' : ''}" onclick="setDuration(25, this)">25 min</button>
+                <button class="preset-btn ${!isDemoMode && totalSeconds === 3600 ? 'active' : ''}" onclick="setDuration(60, this)">1 hr</button>
+                <button class="preset-btn ${!isDemoMode && totalSeconds === 7200 ? 'active' : ''} ${!has2HrPass ? 'locked' : ''}" 
                         onclick="select2HrPreset(this)">
                     ${has2HrPass ? '2 hrs' : '🔒 2 hrs'}
                 </button>
             `;
         } else {
             container.innerHTML = `
-                <button class="preset-btn ${selectedBreakMinutes === 5 ? 'active' : ''}" onclick="setDuration(5, this)">5 min</button>
-                <button class="preset-btn ${selectedBreakMinutes === 15 ? 'active' : ''}" onclick="setDuration(15, this)">15 min</button>
-                <button class="preset-btn ${selectedBreakMinutes === 30 ? 'active' : ''}" onclick="setDuration(30, this)">30 min</button>
+                <button class="preset-btn ${totalSeconds === 300 ? 'active' : ''}" onclick="setDuration(5, this)">5 min</button>
+                <button class="preset-btn ${totalSeconds === 900 ? 'active' : ''}" onclick="setDuration(15, this)">15 min</button>
+                <button class="preset-btn ${totalSeconds === 1800 ? 'active' : ''}" onclick="setDuration(30, this)">30 min</button>
             `;
         }
     }
@@ -236,17 +274,23 @@
         setDuration(120, btnElement);
     }
 
+    function setSecondsDuration(seconds, btnElement) {
+        if (timerInterval) return;
+        isDemoMode = true;
+        totalSeconds = seconds;
+        secondsLeft = seconds;
+        updateDisplay();
+
+        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+    }
+
     function setDuration(minutes, btnElement) {
         if (timerInterval) return;
+        isDemoMode = false;
 
-        if (currentMode === 'focus') {
-            selectedFocusMinutes = minutes;
-            selectedBreakMinutes = calculateBreakTime(minutes);
-            secondsLeft = selectedFocusMinutes * 60;
-        } else {
-            selectedBreakMinutes = minutes;
-            secondsLeft = selectedBreakMinutes * 60;
-        }
+        totalSeconds = minutes * 60;
+        secondsLeft = totalSeconds;
 
         updateDisplay();
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
@@ -267,17 +311,16 @@
             breakTab.className = 'mode-btn';
             title.textContent = '✨ Cozy Focus Session ✨';
             body.classList.remove('break-mode');
-            secondsLeft = selectedFocusMinutes * 60;
+            setSecondsDuration(5, null);
         } else {
             breakTab.className = 'mode-btn active-break';
             focusTab.className = 'mode-btn';
             title.textContent = '☕ Rest & Chill 🌿';
             body.classList.add('break-mode');
-            secondsLeft = selectedBreakMinutes * 60;
+            setDuration(5, null);
         }
 
         renderPresets();
-        updateDisplay();
     }
 
     function startTimer() {
@@ -297,22 +340,43 @@
         clearInterval(timerInterval);
         timerInterval = null;
 
+        const elapsedSeconds = totalSeconds - secondsLeft;
+
         if (currentMode === 'focus') {
-            fetch('/api/earn-coins', {
+            if (elapsedSeconds <= 0) {
+                alert("No time elapsed in this session! 🌸");
+                return;
+            }
+
+            fetch('/api/complete-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ duration_minutes: selectedFocusMinutes, task_completed: true })
+                body: JSON.stringify({ 
+                    duration: elapsedSeconds,
+                    is_demo: isDemoMode 
+                })
             })
             .then(res => res.json())
             .then(data => {
-                alert(`Focus completed! 🌸 You earned ${data.coins_earned} FocusCoins! 🪙\n\nStarting your ${selectedBreakMinutes}-minute break now ☕`);
-                switchMode('break');
-            });
+                // Live update the streak counter on the page
+                if (data.current_streak) {
+                    const streakElem = document.getElementById('streak-count');
+                    if (streakElem) streakElem.textContent = data.current_streak;
+                }
+
+                alert(`🎉 Focus session complete!\n\nYou earned ${data.coins_earned} FocusCoin(s)! 🪙\nTotal Balance: ${data.total_coins} Coins\n🔥 Current Streak: ${data.current_streak || 1} Days`);
+                window.location.href = '/'; 
+            })
+            .catch(err => console.error(err));
         } else {
             alert(`Break is over! 🌿 Ready to jump back into another focus session? 🌸`);
             switchMode('focus');
         }
     }
+
+    // Initial render
+    renderPresets();
+    updateDisplay();
 </script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mindlock - Study Corner</title>
@@ -8,101 +11,308 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Fredoka', cursive, sans-serif; }
-    </style>
+<style>
+body {
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: -0.01em;
+}
+h1, h2, h3, .font-heading, .brand-logo {
+    font-family: 'Fredoka', cursive, sans-serif !important;
+    letter-spacing: 0.02em;
+}
+button, .theme-btn, .stat-box {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+}
+/* 1. PINK (DEFAULT CLASSIC) */
+body.theme-pink {
+    background: radial-gradient(circle at 50% 20%, #fff0f5 0%, #fce7f3 100%);
+    color: #831843;
+}
+body.theme-pink .main-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #fbcfe8;
+    box-shadow: 0 15px 30px rgba(244, 114, 182, 0.15);
+}
+body.theme-pink .inner-card {
+    background: #fdf2f8;
+    border: 2px solid #fbcfe8;
+}
+body.theme-pink .stat-box { background: #ffffff; border: 1.5px solid #fce7f3; }
+body.theme-pink .theme-text { color: #db2777; }
+body.theme-pink .theme-btn { background: #f472b6; color: #ffffff; }
+
+/* 2. MATCHA 🍵 */
+body.theme-matcha {
+    background: radial-gradient(circle at 50% 15%, #f0fdf4 0%, #dcfce7 100%);
+    color: #14532d;
+    font-family: 'Quicksand', sans-serif;
+}
+body.theme-matcha .main-card {
+    background: rgba(248, 250, 248, 0.95);
+    border: 3px solid #86efac;
+    box-shadow: 0 15px 30px rgba(34, 197, 94, 0.12);
+}
+body.theme-matcha .inner-card {
+    background: #e8f5e9;
+    border: 2px solid #a5d6a7;
+}
+body.theme-matcha .stat-box { background: #ffffff; border: 1.5px solid #c8e6c9; }
+body.theme-matcha .theme-text { color: #2e7d32; }
+body.theme-matcha .theme-btn { background: #4caf50; color: #ffffff; }
+
+/* 3. SAKURA BLOSSOM 🌸 */
+body.theme-sakura {
+    background: 
+        radial-gradient(circle at 50% 15%, rgba(251, 113, 133, 0.2) 0%, transparent 60%),
+        linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%);
+    color: #881337;
+    font-family: 'Fredoka', cursive, sans-serif;
+}
+body.theme-sakura .main-card {
+    background: rgba(255, 245, 246, 0.95);
+    border: 3px solid #fda4af;
+    box-shadow: 0 15px 30px rgba(225, 29, 72, 0.15);
+}
+body.theme-sakura .inner-card {
+    background: #ffe4e6;
+    border: 2px solid #fecdd3;
+}
+body.theme-sakura .stat-box { background: #ffffff; border: 1.5px solid #fda4af; }
+body.theme-sakura .theme-text { color: #e11d48; }
+body.theme-sakura .theme-btn { background: #fb7185; color: #ffffff; }
+
+/* 4. LAVENDER DREAMS 🪻 */
+body.theme-lavender {
+    background: 
+        radial-gradient(circle at 50% 10%, rgba(192, 132, 252, 0.25) 0%, transparent 65%),
+        linear-gradient(180deg, #faf5ff 0%, #f3e8ff 100%);
+    color: #581c87;
+    font-family: 'Nunito', sans-serif;
+}
+body.theme-lavender .main-card {
+    background: rgba(250, 245, 255, 0.95);
+    border: 3px solid #c084fc;
+    box-shadow: 0 15px 30px rgba(168, 85, 247, 0.18);
+}
+body.theme-lavender .inner-card {
+    background: #f3e8ff;
+    border: 2px solid #e9d5ff;
+}
+body.theme-lavender .stat-box { background: #ffffff; border: 1.5px solid #e9d5ff; }
+body.theme-lavender .theme-text { color: #9333ea; }
+body.theme-lavender .theme-btn { background: #a855f7; color: #ffffff; }
+
+/* 5. SUNSET GLOW 🌅 */
+body.theme-sunset {
+    background: 
+        radial-gradient(circle at 50% 18%, rgba(253, 186, 116, 0.6) 0%, rgba(251, 146, 60, 0.3) 35%, transparent 70%),
+        linear-gradient(180deg, #ffedd5 0%, #fed7aa 40%, #fbcfe8 100%);
+    background-attachment: fixed;
+    color: #7c2d12;
+}
+body.theme-sunset .main-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    border: 2px solid #fdba74;
+    box-shadow: 0 15px 35px -5px rgba(234, 88, 12, 0.2);
+}
+body.theme-sunset .inner-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 215, 170, 0.4) 100%);
+    border: 2px solid #fb923c;
+}
+body.theme-sunset .stat-box {
+    background: #ffffff;
+    border: 1.5px solid #fdba74;
+}
+body.theme-sunset .theme-text { color: #ea580c; }
+body.theme-sunset .theme-btn {
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);
+}
+
+/* 6. MIDNIGHT FOCUS 🌙 */
+body.theme-midnight {
+    background: 
+        radial-gradient(circle at 50% 15%, rgba(129, 140, 248, 0.25) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 75%),
+        linear-gradient(180deg, #0b0f19 0%, #1e1b4b 60%, #020617 100%);
+    background-attachment: fixed;
+    color: #e2e8f0;
+}
+body.theme-midnight .main-card {
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(12px);
+    border: 2px solid #312e81;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+body.theme-midnight .inner-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border: 2px solid #4338ca;
+}
+body.theme-midnight .stat-box {
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    color: #f8fafc;
+}
+body.theme-midnight .theme-text { color: #a5b4fc; }
+body.theme-midnight .theme-btn {
+    background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.45);
+}
+</style>
 </head>
-<body class="{% if current_user.is_authenticated and current_user.theme == 'matcha' %}bg-emerald-50 text-emerald-900{% elif current_user.is_authenticated and current_user.theme == 'lavender' %}bg-purple-50 text-purple-900{% else %}bg-pink-100 text-pink-900{% endif %} min-h-screen p-6">
+<body class="theme-{{ current_user.theme if current_user.is_authenticated and current_user.theme else 'pink' }} min-h-screen p-6 transition-colors duration-300">
 
     <!-- MAIN CONTAINER CARD -->
-    <div class="max-w-4xl mx-auto bg-white rounded-[35px] p-8 shadow-xl shadow-pink-200 border-4 border-pink-200">
+    <div class="main-card max-w-4xl mx-auto rounded-[35px] p-8 shadow-xl transition-all duration-300 border-4">
         
         <!-- HEADER BAR -->
-        <header class="flex justify-between items-center pb-6 border-b-2 border-pink-100">
+        <header class="flex justify-between items-center pb-6 border-b-2 border-pink-100/50">
             <div class="flex items-center gap-3">
                 <span class="text-3xl">🎀</span>
-                <h1 class="text-3xl font-bold text-pink-400">Mindlock</h1>
+                <h1 class="text-3xl font-bold theme-text transition-colors">Mindlock</h1>
             </div>
             
             <div class="flex items-center gap-3">
-    <!-- Streak Display -->
-    <div class="bg-rose-50 border border-rose-200 text-rose-500 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm">
-        🔥 5 Days
-    </div>
+        <!-- Clickable Streak Badge -->
+        <button onclick="openStreakModal()" class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-2xl hover:bg-amber-100 transition-colors cursor-pointer">
+            <span class="text-lg">🔥</span>
+            <span class="font-bold text-amber-800 text-sm">
+        {{ current_user.streak_info.current_streak if current_user.streak_info else 0 }} Days
+        </span>
+        </button>
 
-    <!-- Clickable Shop Link disguised as the Coin Display -->
-    <a href="{{ url_for('shop') }}" class="bg-amber-50 border border-amber-200 text-amber-600 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm hover:bg-amber-100 transition cursor-pointer">
-        🪙 450 Coins
-    </a>
-</div>
+                <!-- DYNAMIC COIN DISPLAY LINK TO SHOP -->
+                <a href="{{ url_for('shop') }}" class="bg-amber-50 border border-amber-200 text-amber-600 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm hover:bg-amber-100 transition">
+                    🪙 {{ current_user.coins if current_user.is_authenticated else 0 }} Coins
+                </a>
+            </div>
         </header>
 
         <!-- WELCOME BANNER -->
-        <section class="bg-pink-50 border-2 border-pink-200 rounded-[25px] p-6 my-6 text-center">
+        <section class="inner-card border-2 rounded-[25px] p-6 my-6 text-center transition-all duration-300">
             <span class="text-4xl">🌸</span>
-            <h1 class="text-3xl font-bold text-pink-400">
-    Welcome Back, {{ current_user.username if current_user.is_authenticated else 'Guest' }}! 🌸
-</h1>
-            <p class="text-pink-400 text-sm mt-1">Ready for a productive study session today?</p>
-            <a href="/timer" class="inline-block mt-4 bg-pink-400 hover:bg-pink-500 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform active:scale-95">
-    ⚡ Start Focus Session
-</a>
+            <h1 class="text-3xl font-bold theme-text transition-colors">
+                Welcome Back, {{ current_user.username if current_user.is_authenticated else 'Guest' }}! 🌸
+            </h1>
+            <p class="theme-text text-sm mt-1 opacity-90 transition-colors">Ready for a productive study session today?</p>
+            <a href="/timer" class="inline-block mt-4 theme-btn text-white font-bold px-6 py-2.5 rounded-full shadow-md transition transform active:scale-95">
+                ⚡ Start Focus Session
+            </a>
         </section>
-<!-- LEFT: QUICK STATS (CLICKABLE) -->
-<a href="{{ url_for('stats') }}" class="block bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5 hover:border-pink-300 hover:shadow-md transition cursor-pointer no-underline">
-    <h3 class="text-lg font-bold text-pink-400 mb-4 flex items-center gap-2">
-        <span>📊</span> Study Stats
-    </h3>
-    <div class="grid grid-cols-2 gap-3 text-center">
-        <div class="bg-white p-3 rounded-2xl border border-pink-100">
-            <p class="text-xs text-pink-300 font-bold">FOCUS TIME</p>
-            <p class="text-xl font-bold text-pink-500">18.5 Hrs</p>
-        </div>
-        <div class="bg-white p-3 rounded-2xl border border-pink-100">
-            <p class="text-xs text-pink-300 font-bold">ACCURACY</p>
-            <p class="text-xl font-bold text-pink-500">92%</p>
-        </div>
-        <div class="bg-white p-3 rounded-2xl border border-pink-100">
-            <p class="text-xs text-pink-300 font-bold">BADGES</p>
-            <p class="text-xl font-bold text-pink-500">4 / 10</p>
-        </div>
-        <div class="bg-white p-3 rounded-2xl border border-pink-100">
-            <p class="text-xs text-pink-300 font-bold">PASSES</p>
-            <p class="text-xl font-bold text-pink-500">3 Used</p>
-        </div>
-    </div>
-</a>
-                    <div class="bg-white p-3 rounded-2xl border border-pink-100">
-                        <p class="text-xs text-pink-300 font-bold">PASSES</p>
-                        <p class="text-xl font-bold text-pink-500">3 Used</p>
+
+        <!-- ==================== THEME PREVIEW & SELECTOR WIDGET ==================== -->
+        <div class="inner-card border-2 rounded-[25px] p-5 mb-6 transition-all duration-300">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🎨</span>
+                    <div>
+                        <h3 class="font-bold theme-text text-sm transition-colors">Theme Selector</h3>
+                        <p class="text-xs opacity-75">Click any theme to preview its look!</p>
                     </div>
+                </div>
+
+                <!-- Theme Preview Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="previewTheme('pink', 'Free', true)" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-pink-100 text-pink-700 hover:bg-pink-200">
+                        🌸 Pink
+                    </button>
+
+                    <button onclick="previewTheme('matcha', '100 Coins', {{ 'true' if current_user.is_authenticated and 'matcha' in (current_user.unlocked_themes or '') else 'false' }})" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+                        🍵 Matcha
+                    </button>
+
+                    <button onclick="previewTheme('sakura', '80 Coins', {{ 'true' if current_user.is_authenticated and 'sakura' in (current_user.unlocked_themes or '') else 'false' }})" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-rose-100 text-rose-800 hover:bg-rose-200">
+                        🌺 Sakura
+                    </button>
+
+                    <button onclick="previewTheme('lavender', '120 Coins', {{ 'true' if current_user.is_authenticated and 'lavender' in (current_user.unlocked_themes or '') else 'false' }})" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-purple-100 text-purple-800 hover:bg-purple-200">
+                        🪻 Lavender
+                    </button>
+
+                    <button onclick="previewTheme('sunset', '150 Coins', {{ 'true' if current_user.is_authenticated and 'sunset' in (current_user.unlocked_themes or '') else 'false' }})" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-orange-100 text-orange-800 hover:bg-amber-200">
+                        🌆 Sunset
+                    </button>
+
+                    <button onclick="previewTheme('midnight', '200 Coins', {{ 'true' if current_user.is_authenticated and 'midnight' in (current_user.unlocked_themes or '') else 'false' }})" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800 text-indigo-300 hover:bg-slate-700">
+                        🌙 Midnight
+                    </button>
                 </div>
             </div>
 
+<!-- Floating Preview Status Bar -->
+<div id="preview-bar" class="hidden mt-4 pt-3 border-t border-pink-200/50 flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+    <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-200">👁️ Previewing: <strong id="preview-theme-name" class="capitalize theme-text font-bold"></strong></span>
+        <span id="preview-price-tag" class="text-xs font-bold px-2.5 py-1 rounded-full"></span>
+    </div>
+    
+    <div class="flex gap-2">
+        <button onclick="resetToOriginalTheme()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-sm">
+            ↩ Revert
+        </button>
+        <div id="preview-action-btn"></div>
+    </div>
+</div>        <!-- ======================================================================== -->
+
+        <!-- MAIN GRID SECTION -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- LEFT: QUICK STATS (CLICKABLE) -->
+            <a href="{{ url_for('stats') }}" class="inner-card block border-2 rounded-[25px] p-5 hover:shadow-md transition cursor-pointer no-underline duration-300">
+                <h3 class="text-lg font-bold theme-text mb-4 flex items-center gap-2 transition-colors">
+                    <span>📊</span> Study Stats
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
+                        <p class="text-xs theme-text font-bold opacity-80">FOCUS TIME</p>
+                        <p class="text-xl font-bold theme-text">18.5 Hrs</p>
+                    </div>
+                    <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
+                        <p class="text-xs theme-text font-bold opacity-80">ACCURACY</p>
+                        <p class="text-xl font-bold theme-text">92%</p>
+                    </div>
+                    <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
+                        <p class="text-xs theme-text font-bold opacity-80">BADGES</p>
+                        <p class="text-xl font-bold theme-text">4 / 10</p>
+                    </div>
+                    <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
+                        <p class="text-xs theme-text font-bold opacity-80">PASSES</p>
+                        <p class="text-xl font-bold theme-text">3 Used</p>
+                    </div>
+                </div>
+            </a>
+
             <!-- RIGHT: REWARDS SHOP PREVIEW -->
-            <div class="bg-pink-50/60 border-2 border-pink-100 rounded-[25px] p-5 space-y-3">
+            <div class="inner-card border-2 rounded-[25px] p-5 space-y-3 transition-all duration-300">
                 <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-lg font-bold text-pink-400 flex items-center gap-2">
+                    <h3 class="text-lg font-bold theme-text flex items-center gap-2 transition-colors">
                         <span>🎁</span> Study Rewards
                     </h3>
                     <span class="text-[11px] font-bold bg-pink-200 text-pink-600 px-2.5 py-0.5 rounded-full">Max 2 Hrs/Pass</span>
                 </div>
 
                 <!-- PASS ITEM 1 -->
-                <div class="bg-white p-3.5 rounded-2xl border border-pink-100 flex items-center justify-between">
+                <div class="stat-box p-3.5 rounded-2xl border flex items-center justify-between transition-all duration-300">
                     <div>
-                        <p class="font-bold text-pink-600 text-sm">2-Hour Focus Pass</p>
+                        <p class="font-bold theme-text text-sm">2-Hour Focus Pass</p>
                         <p class="text-xs text-amber-500 font-bold">🪙 100 Coins</p>
                     </div>
-                    <button class="bg-pink-400 hover:bg-pink-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+                    <a href="{{ url_for('shop') }}" class="theme-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition inline-block">
                         Redeem
-                    </button>
+                    </a>
                 </div>
 
                 <!-- PASS ITEM 2 (LOCKED) -->
-                <div class="bg-white/60 p-3.5 rounded-2xl border border-pink-100 flex items-center justify-between opacity-60">
+                <div class="stat-box p-3.5 rounded-2xl border flex items-center justify-between opacity-60 transition-all duration-300">
                     <div>
-                        <p class="font-bold text-pink-600 text-sm">Weekend Break Pass</p>
+                        <p class="font-bold theme-text text-sm">Weekend Break Pass</p>
                         <p class="text-xs text-amber-500 font-bold">🪙 500 Coins</p>
                     </div>
                     <button disabled class="bg-gray-200 text-gray-400 text-xs font-bold px-4 py-2 rounded-xl cursor-not-allowed">
@@ -114,11 +324,151 @@
         </div>
 
         <!-- FOOTER -->
-        <footer class="text-center text-xs text-pink-300 mt-6 pt-4 border-t border-pink-100">
+        <footer class="text-center text-xs opacity-75 mt-6 pt-4 border-t border-pink-100/50">
             Made with 💕 for Mindlock G-18
         </footer>
 
     </div>
+
+    <!-- PREVIEW & THEME SWITCHING SCRIPT -->
+    <script>
+        const ORIGINAL_THEME = "{{ current_user.theme if current_user.is_authenticated and current_user.theme else 'pink' }}";
+
+        function previewTheme(themeId, price, isUnlocked) {
+            // Apply theme class to <body> temporarily
+            document.body.className = `theme-${themeId} min-h-screen p-6 transition-colors duration-300`;
+
+            const previewBar = document.getElementById('preview-bar');
+            const themeNameTag = document.getElementById('preview-theme-name');
+            const priceTag = document.getElementById('preview-price-tag');
+            const actionBtnContainer = document.getElementById('preview-action-btn');
+
+            previewBar.classList.remove('hidden');
+            themeNameTag.innerText = themeId;
+
+            if (isUnlocked) {
+                priceTag.innerText = "Unlocked";
+                priceTag.className = "text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full";
+                
+                actionBtnContainer.innerHTML = `
+                    <button onclick="applyTheme('${themeId}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                        ✓ Set Active
+                    </button>
+                `;
+            } else {
+                priceTag.innerText = `Cost: ${price}`;
+                priceTag.className = "text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full";
+                
+                actionBtnContainer.innerHTML = `
+                    <a href="{{ url_for('shop') }}" class="theme-btn text-white text-xs font-bold px-3 py-1.5 rounded-lg transition inline-block">
+                        🛒 Buy in Shop
+                    </a>
+                `;
+            }
+        }
+
+        function resetToOriginalTheme() {
+            document.body.className = `theme-${ORIGINAL_THEME} min-h-screen p-6 transition-colors duration-300`;
+            document.getElementById('preview-bar').classList.add('hidden');
+        }
+
+        function applyTheme(themeId) {
+            fetch('/api/set-theme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ theme: themeId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error("Error setting theme:", err));
+        }
+    </script>
+
+<!-- Streak Calendar Modal -->
+<div id="streakModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl border border-pink-100 text-center relative">
+        <!-- Close Button -->
+        <button onclick="closeStreakModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+        
+        <!-- Header -->
+        <div class="mb-4">
+            <span class="text-3xl">🔥</span>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">Study Streak</h3>
+            <p class="text-xs text-pink-500 font-semibold" id="streakModalCount">0 Day Streak!</p>
+        </div>
+
+        <!-- Month Header -->
+        <div class="flex justify-between items-center mb-3 text-sm font-bold text-gray-700">
+            <span id="calendarMonth">Month Year</span>
+        </div>
+
+        <!-- Days Grid -->
+        <div class="grid grid-cols-7 gap-1 text-xs text-gray-400 font-bold mb-2">
+            <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+        </div>
+        <div id="calendarDays" class="grid grid-cols-7 gap-1 text-sm"></div>
+
+        <button onclick="closeStreakModal()" class="mt-5 w-full py-2.5 bg-pink-400 text-white font-bold rounded-2xl hover:bg-pink-500 transition-colors shadow-sm">
+            Keep It Up! 🌸
+        </button>
+    </div>
+</div>
+
+<script>
+function openStreakModal() {
+    document.getElementById('streakModal').classList.remove('hidden');
+    renderCalendar();
+}
+
+function closeStreakModal() {
+    document.getElementById('streakModal').classList.add('hidden');
+}
+
+function renderCalendar() {
+    const today = new Date();
+    const currentStreak = parseInt("{{ current_user.streak_info.current_streak if current_user.streak_info else 0 }}");
+    
+    // Set Header
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    document.getElementById('calendarMonth').innerText = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+    document.getElementById('streakModalCount').innerText = `${currentStreak} Day Streak! 🔥`;
+
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+    const totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const calendarDays = document.getElementById('calendarDays');
+    calendarDays.innerHTML = '';
+
+    // Empty slots before month start
+    for (let i = 0; i < firstDay; i++) {
+        calendarDays.innerHTML += `<div></div>`;
+    }
+
+    // Days rendering
+    for (let day = 1; day <= totalDays; day++) {
+        const isToday = day === today.getDate();
+        // Highlight consecutive active days up to current streak count ending today
+        const isActiveStreak = isToday || (day <= today.getDate() && day > (today.getDate() - currentStreak));
+
+        let dayClass = "w-8 h-8 flex items-center justify-center rounded-full mx-auto text-xs font-semibold ";
+        
+        if (isActiveStreak) {
+            dayClass += "bg-amber-400 text-white font-bold shadow-sm";
+        } else if (isToday) {
+            dayClass += "border-2 border-pink-400 text-pink-500";
+        } else {
+            dayClass += "text-gray-600 hover:bg-gray-100";
+        }
+
+        calendarDays.innerHTML += `<div class="${dayClass}">${day}</div>`;
+    }
+}
+</script>
 
 </body>
 </html>

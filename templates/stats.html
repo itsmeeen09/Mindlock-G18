@@ -18,7 +18,14 @@
         </div>
 
         <!-- Summary Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            
+            <!-- 🔥 Streak Card -->
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
+                <span class="text-sm font-bold text-amber-600">Current Streak</span>
+                <p class="text-3xl font-bold text-amber-500 mt-1">🔥 {{ current_user.streak_info.current_streak if current_user.streak_info else 0 }} Days</p>
+            </div>
+
             <div class="bg-rose-50 border border-pink-200 rounded-2xl p-5 text-center">
                 <span class="text-sm font-bold text-pink-400">Current Balance</span>
                 <p class="text-3xl font-bold text-amber-500 mt-1">🪙 {{ current_user.coins }}</p>
@@ -37,7 +44,7 @@
 
         <!-- Session History Log -->
         <h2 class="text-xl font-bold text-gray-700 mb-4">📜 Recent Sessions</h2>
-        <div class="space-y-3">
+        <div class="space-y-3 mb-8">
             {% if logs %}
                 {% for log in logs|reverse %}
                 <div class="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-xl">
@@ -54,6 +61,36 @@
             {% endif %}
         </div>
 
+<!-- 🏆 Achievements Section -->
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ url_for('achievements') }}" class="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <h2 class="text-xl font-bold text-gray-700 flex items-center gap-2">
+                    🏆 Achievements
+                    <span class="text-xs text-pink-500 font-semibold group-hover:underline ml-1">View All →</span>
+                </h2>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {% if achievements %}
+                {% for achievement in achievements %}
+                <a href="{{ url_for('achievements') }}" class="flex items-center p-4 rounded-2xl border transition-all duration-200 hover:scale-[1.01] {% if achievement.id in unlocked_ids %}bg-amber-50 border-amber-200{% else %}bg-gray-50 border-gray-100 opacity-60{% endif %}">
+                    <span class="text-3xl mr-4">{{ achievement.icon }}</span>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-gray-800">{{ achievement.title }}</h3>
+                        <p class="text-xs text-gray-500">{{ achievement.description }}</p>
+                    </div>
+                    {% if achievement.id in unlocked_ids %}
+                        <span class="text-xs font-bold bg-amber-200 text-amber-800 px-2.5 py-1 rounded-full">Unlocked ✨</span>
+                    {% else %}
+                        <span class="text-xs font-bold bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full">+{{ achievement.coin_reward }} 🪙</span>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-400 text-center py-4 col-span-2">No achievements setup yet!</p>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
