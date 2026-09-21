@@ -28,6 +28,8 @@
 
         <!-- Dropdown where the user chooses how long to study -->
         <select id="duration" name="duration" required>
+            <option value="1">1 minute</option>
+            <option value="2">2 minutes</option>
             <option value="15">15 minutes</option>
             <option value="30" selected>30 minutes</option>
             <option value="45">45 minutes</option>
@@ -43,6 +45,17 @@
 
     </form>
 
+    <div class="form-navigation">
+
+        <a href="{{ url_for('home') }}">
+            ← Back to Home
+        </a>
+
+        <a href="{{ url_for('view_sessions') }}">
+            View My Sessions
+        </a>
+
+    </div>
 </body>
 
 </html>

@@ -250,3 +250,38 @@ select {
     display: inline-block;
     margin-top: 10px;
 }
+
+.sessions-link {
+    display: block;
+    margin-top: 15px;
+}
+
+.task-navigation {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.task-navigation a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.form-navigation {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.form-navigation a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.sessions-navigation {
+    text-align: center;
+    margin-top: 35px;
+}
+
+.sessions-navigation a {
+    display: inline-block;
+    margin: 0 10px;
+}

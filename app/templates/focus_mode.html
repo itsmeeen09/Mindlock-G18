@@ -37,7 +37,9 @@
         <a class="tasks-link" href="{{ url_for('view_tasks') }}">
             View My Tasks
         </a>
-
+        <a class="sessions-link" href="{{ url_for('view_sessions') }}">
+            ← Back to My Sessions
+        </a>
     </main>
 
     <script>
@@ -79,6 +81,12 @@
                 } else {
                     clearInterval(timerInterval);
                     timerInterval = null;
+
+                    fetch("{{ url_for('end_session', session_id=session.id) }}", {
+                        method: "POST"
+                    });
+
+                    status.textContent = "completed";
                 }
             }, 1000);
         });
