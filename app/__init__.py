@@ -71,7 +71,26 @@ def create_app():
 
         return render_template("sessions.html", sessions=sessions)
 
+    @app.route("/sessions/<int:session_id>/delete", methods=["POST"])
+    def delete_session(session_id):
+
+        # Find the study session.
+        session = StudySession.query.get_or_404(session_id)
+
+        # Delete all tasks belonging to this session.
+        for task in session.tasks:
+            db.session.delete(task)
+
+        # Delete the study session.
+        db.session.delete(session)
+
+        # Save the changes.
+        db.session.commit()
+
+        # Return to the My Study Sessions page.
+        return redirect(url_for("view_sessions"))
     # Route for creating a task.
+
     @app.route("/tasks/create/<int:session_id>", methods=["GET", "POST"])
     def create_task(session_id):
 

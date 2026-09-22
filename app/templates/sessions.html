@@ -44,7 +44,9 @@
                 <a href="{{ url_for('focus_mode', session_id=session.id) }}">
                     <button type="button">Start Focus Mode</button>
                 </a>
-
+                <form method="POST" action="{{ url_for('delete_session', session_id=session.id) }}">
+                    <button type="submit">Delete Session</button>
+                </form>
             </div>
 
         </section>
