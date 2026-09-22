@@ -242,21 +242,31 @@ def shop():
 def stats():
     user_logs = FocusCoin.query.filter_by(user_id=current_user.id).all()
     total_earned = sum(log.amount for log in user_logs)
-    total_sessions = len(user_logs)
     
     all_achievements = Achievement.query.all()
-    
-    # Query unlocked achievements directly for current_user
     user_unlocks = UserAchievement.query.filter_by(user_id=current_user.id).all()
     unlocked_ids = [ua.achievement_id for ua in user_unlocks]
     
+    completed_sessions = StudySession.query.filter_by(status='completed').all()
+    all_sessions = StudySession.query.all()
+
+    total_minutes = sum(s.duration for s in completed_sessions)
+    total_hours = round(total_minutes / 60, 1)
+
+    total_started = len(all_sessions)
+    total_completed = len(completed_sessions)
+    accuracy = round((total_completed / total_started) * 100) if total_started > 0 else 100
+
     return render_template(
         'stats.html', 
         logs=user_logs, 
         total_earned=total_earned, 
-        total_sessions=total_sessions,
+        total_sessions=total_started,
+        completed_sessions=total_completed,
         achievements=all_achievements,
-        unlocked_ids=unlocked_ids
+        unlocked_ids=unlocked_ids,
+        total_hours=total_hours,
+        accuracy=accuracy
     )
 
 @app.route('/achievements')
