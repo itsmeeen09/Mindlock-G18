@@ -97,7 +97,9 @@
                             <button type="submit">Redo Task</button>
                         </form>
 
-                        <button type="button">Delete Task</button>
+                        <form method="POST" action="{{ url_for('delete_task', task_id=task.id) }}">
+                            <button type="submit">Delete Task</button>
+                        </form>
 
                     </details>
 

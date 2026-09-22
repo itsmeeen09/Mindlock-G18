@@ -192,5 +192,21 @@ def create_app():
 
         # Return to the My Tasks page.
         return redirect(url_for("view_tasks"))
-    # return application
+
+    @app.route("/tasks/<int:task_id>/delete", methods=["POST"])
+    def delete_task(task_id):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Delete the task.
+        db.session.delete(task)
+
+        # Save the change.
+        db.session.commit()
+
+        # Return to the My Tasks page.
+        return redirect(url_for("view_tasks"))
+
+# return application
     return app
