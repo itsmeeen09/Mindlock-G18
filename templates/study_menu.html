@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindLock</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="home-container">
+
+        <h1>Welcome to MindLock!</h1>
+
+        <p>Your study management and focus companion.</p>
+
+        <a href="{{ url_for('create_session') }}">
+            <button type="button">Create a Study Session</button>
+        </a>
+        <a href="{{ url_for('view_sessions') }}">
+            <button type="button">My Study Sessions</button>
+        </a>
+        <a href="{{ url_for('view_tasks') }}">
+            <button type="button">View My Tasks</button>
+        </a>
+
+    </main>
+
+</body>
+
+</html>

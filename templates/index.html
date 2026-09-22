@@ -9,8 +9,6 @@
     <title>Mindlock - Study Corner</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body {
     font-family: 'Nunito', sans-serif;
@@ -174,13 +172,13 @@ body.theme-midnight .theme-btn {
             </div>
             
             <div class="flex items-center gap-3">
-        <!-- Clickable Streak Badge -->
-        <button onclick="openStreakModal()" class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-2xl hover:bg-amber-100 transition-colors cursor-pointer">
-            <span class="text-lg">🔥</span>
-            <span class="font-bold text-amber-800 text-sm">
-        {{ current_user.streak_info.current_streak if current_user.streak_info else 0 }} Days
-        </span>
-        </button>
+                <!-- Clickable Streak Badge -->
+                <button onclick="openStreakModal()" class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-2xl hover:bg-amber-100 transition-colors cursor-pointer">
+                    <span class="text-lg">🔥</span>
+                    <span class="font-bold text-amber-800 text-sm">
+                        {{ current_user.streak_info.current_streak if current_user.streak_info else 0 }} Days
+                    </span>
+                </button>
 
                 <!-- DYNAMIC COIN DISPLAY LINK TO SHOP -->
                 <a href="{{ url_for('shop') }}" class="bg-amber-50 border border-amber-200 text-amber-600 font-bold px-4 py-2 rounded-full flex items-center gap-2 text-sm shadow-sm hover:bg-amber-100 transition">
@@ -246,25 +244,26 @@ body.theme-midnight .theme-btn {
                 </div>
             </div>
 
-<!-- Floating Preview Status Bar -->
-<div id="preview-bar" class="hidden mt-4 pt-3 border-t border-pink-200/50 flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
-    <div class="flex items-center gap-2">
-        <span class="text-xs text-slate-200">👁️ Previewing: <strong id="preview-theme-name" class="capitalize theme-text font-bold"></strong></span>
-        <span id="preview-price-tag" class="text-xs font-bold px-2.5 py-1 rounded-full"></span>
-    </div>
-    
-    <div class="flex gap-2">
-        <button onclick="resetToOriginalTheme()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-sm">
-            ↩ Revert
-        </button>
-        <div id="preview-action-btn"></div>
-    </div>
-</div>        <!-- ======================================================================== -->
+            <!-- Floating Preview Status Bar -->
+            <div id="preview-bar" class="hidden mt-4 pt-3 border-t border-pink-200/50 flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-200">👁️ Previewing: <strong id="preview-theme-name" class="capitalize theme-text font-bold"></strong></span>
+                    <span id="preview-price-tag" class="text-xs font-bold px-2.5 py-1 rounded-full"></span>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="resetToOriginalTheme()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-sm">
+                        ↩ Revert
+                    </button>
+                    <div id="preview-action-btn"></div>
+                </div>
+            </div>
+        </div>
 
-        <!-- MAIN GRID SECTION -->
+        <!-- MAIN GRID SECTION (STATS + REWARDS SIDE BY SIDE) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <!-- LEFT: QUICK STATS (CLICKABLE) -->
+<!-- LEFT: QUICK STATS (CLICKABLE) -->
             <a href="{{ url_for('stats') }}" class="inner-card block border-2 rounded-[25px] p-5 hover:shadow-md transition cursor-pointer no-underline duration-300">
                 <h3 class="text-lg font-bold theme-text mb-4 flex items-center gap-2 transition-colors">
                     <span>📊</span> Study Stats
@@ -272,25 +271,25 @@ body.theme-midnight .theme-btn {
                 <div class="grid grid-cols-2 gap-3 text-center">
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
                         <p class="text-xs theme-text font-bold opacity-80">FOCUS TIME</p>
-                        <p class="text-xl font-bold theme-text">18.5 Hrs</p>
+                        <p class="text-xl font-bold theme-text">{{ total_hours }} Hrs</p>
                     </div>
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
                         <p class="text-xs theme-text font-bold opacity-80">ACCURACY</p>
-                        <p class="text-xl font-bold theme-text">92%</p>
+                        <p class="text-xl font-bold theme-text">{{ accuracy }}%</p>
                     </div>
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
                         <p class="text-xs theme-text font-bold opacity-80">BADGES</p>
-                        <p class="text-xl font-bold theme-text">4 / 10</p>
+                        <p class="text-xl font-bold theme-text">{{ unlocked_count }} / {{ total_achievements }}</p>
                     </div>
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
-                        <p class="text-xs theme-text font-bold opacity-80">PASSES</p>
-                        <p class="text-xl font-bold theme-text">3 Used</p>
+                        <p class="text-xs theme-text font-bold opacity-80">STREAK</p>
+                        <p class="text-xl font-bold theme-text">{{ current_user.streak_info.current_streak if current_user.is_authenticated and current_user.streak_info else 0 }} Days</p>
                     </div>
                 </div>
             </a>
 
-            <!-- RIGHT: REWARDS SHOP PREVIEW -->
-            <div class="inner-card border-2 rounded-[25px] p-5 space-y-3 transition-all duration-300">
+            <!-- RIGHT: REWARDS SHOP PREVIEW (CLICKABLE CARD TO /SHOP) -->
+            <a href="{{ url_for('shop') }}" class="inner-card block border-2 rounded-[25px] p-5 space-y-3 hover:shadow-md transition cursor-pointer no-underline duration-300">
                 <div class="flex justify-between items-center mb-1">
                     <h3 class="text-lg font-bold theme-text flex items-center gap-2 transition-colors">
                         <span>🎁</span> Study Rewards
@@ -304,9 +303,9 @@ body.theme-midnight .theme-btn {
                         <p class="font-bold theme-text text-sm">2-Hour Focus Pass</p>
                         <p class="text-xs text-amber-500 font-bold">🪙 100 Coins</p>
                     </div>
-                    <a href="{{ url_for('shop') }}" class="theme-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition inline-block">
+                    <span class="theme-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition inline-block">
                         Redeem
-                    </a>
+                    </span>
                 </div>
 
                 <!-- PASS ITEM 2 (LOCKED) -->
@@ -315,11 +314,11 @@ body.theme-midnight .theme-btn {
                         <p class="font-bold theme-text text-sm">Weekend Break Pass</p>
                         <p class="text-xs text-amber-500 font-bold">🪙 500 Coins</p>
                     </div>
-                    <button disabled class="bg-gray-200 text-gray-400 text-xs font-bold px-4 py-2 rounded-xl cursor-not-allowed">
+                    <span class="bg-gray-200 text-gray-400 text-xs font-bold px-4 py-2 rounded-xl">
                         🔒 Locked
-                    </button>
+                    </span>
                 </div>
-            </div>
+            </a>
 
         </div>
 
@@ -335,7 +334,6 @@ body.theme-midnight .theme-btn {
         const ORIGINAL_THEME = "{{ current_user.theme if current_user.is_authenticated and current_user.theme else 'pink' }}";
 
         function previewTheme(themeId, price, isUnlocked) {
-            // Apply theme class to <body> temporarily
             document.body.className = `theme-${themeId} min-h-screen p-6 transition-colors duration-300`;
 
             const previewBar = document.getElementById('preview-bar');
@@ -390,85 +388,77 @@ body.theme-midnight .theme-btn {
         }
     </script>
 
-<!-- Streak Calendar Modal -->
-<div id="streakModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl border border-pink-100 text-center relative">
-        <!-- Close Button -->
-        <button onclick="closeStreakModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
-        
-        <!-- Header -->
-        <div class="mb-4">
-            <span class="text-3xl">🔥</span>
-            <h3 class="text-xl font-bold text-gray-800 mt-1">Study Streak</h3>
-            <p class="text-xs text-pink-500 font-semibold" id="streakModalCount">0 Day Streak!</p>
-        </div>
+    <!-- Streak Calendar Modal -->
+    <div id="streakModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl border border-pink-100 text-center relative">
+            <button onclick="closeStreakModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+            
+            <div class="mb-4">
+                <span class="text-3xl">🔥</span>
+                <h3 class="text-xl font-bold text-gray-800 mt-1">Study Streak</h3>
+                <p class="text-xs text-pink-500 font-semibold" id="streakModalCount">0 Day Streak!</p>
+            </div>
 
-        <!-- Month Header -->
-        <div class="flex justify-between items-center mb-3 text-sm font-bold text-gray-700">
-            <span id="calendarMonth">Month Year</span>
-        </div>
+            <div class="flex justify-between items-center mb-3 text-sm font-bold text-gray-700">
+                <span id="calendarMonth">Month Year</span>
+            </div>
 
-        <!-- Days Grid -->
-        <div class="grid grid-cols-7 gap-1 text-xs text-gray-400 font-bold mb-2">
-            <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
-        </div>
-        <div id="calendarDays" class="grid grid-cols-7 gap-1 text-sm"></div>
+            <div class="grid grid-cols-7 gap-1 text-xs text-gray-400 font-bold mb-2">
+                <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            </div>
+            <div id="calendarDays" class="grid grid-cols-7 gap-1 text-sm"></div>
 
-        <button onclick="closeStreakModal()" class="mt-5 w-full py-2.5 bg-pink-400 text-white font-bold rounded-2xl hover:bg-pink-500 transition-colors shadow-sm">
-            Keep It Up! 🌸
-        </button>
+            <button onclick="closeStreakModal()" class="mt-5 w-full py-2.5 bg-pink-400 text-white font-bold rounded-2xl hover:bg-pink-500 transition-colors shadow-sm">
+                Keep It Up! 🌸
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-function openStreakModal() {
-    document.getElementById('streakModal').classList.remove('hidden');
-    renderCalendar();
-}
-
-function closeStreakModal() {
-    document.getElementById('streakModal').classList.add('hidden');
-}
-
-function renderCalendar() {
-    const today = new Date();
-    const currentStreak = parseInt("{{ current_user.streak_info.current_streak if current_user.streak_info else 0 }}");
-    
-    // Set Header
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    document.getElementById('calendarMonth').innerText = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-    document.getElementById('streakModalCount').innerText = `${currentStreak} Day Streak! 🔥`;
-
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
-    const totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    const calendarDays = document.getElementById('calendarDays');
-    calendarDays.innerHTML = '';
-
-    // Empty slots before month start
-    for (let i = 0; i < firstDay; i++) {
-        calendarDays.innerHTML += `<div></div>`;
+    <script>
+    function openStreakModal() {
+        document.getElementById('streakModal').classList.remove('hidden');
+        renderCalendar();
     }
 
-    // Days rendering
-    for (let day = 1; day <= totalDays; day++) {
-        const isToday = day === today.getDate();
-        // Highlight consecutive active days up to current streak count ending today
-        const isActiveStreak = isToday || (day <= today.getDate() && day > (today.getDate() - currentStreak));
+    function closeStreakModal() {
+        document.getElementById('streakModal').classList.add('hidden');
+    }
 
-        let dayClass = "w-8 h-8 flex items-center justify-center rounded-full mx-auto text-xs font-semibold ";
+    function renderCalendar() {
+        const today = new Date();
+        const currentStreak = parseInt("{{ current_user.streak_info.current_streak if current_user.streak_info else 0 }}");
         
-        if (isActiveStreak) {
-            dayClass += "bg-amber-400 text-white font-bold shadow-sm";
-        } else if (isToday) {
-            dayClass += "border-2 border-pink-400 text-pink-500";
-        } else {
-            dayClass += "text-gray-600 hover:bg-gray-100";
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('calendarMonth').innerText = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+        document.getElementById('streakModalCount').innerText = `${currentStreak} Day Streak! 🔥`;
+
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+        const totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+        const calendarDays = document.getElementById('calendarDays');
+        calendarDays.innerHTML = '';
+
+        for (let i = 0; i < firstDay; i++) {
+            calendarDays.innerHTML += `<div></div>`;
         }
 
-        calendarDays.innerHTML += `<div class="${dayClass}">${day}</div>`;
+        for (let day = 1; day <= totalDays; day++) {
+            const isToday = day === today.getDate();
+            const isActiveStreak = isToday || (day <= today.getDate() && day > (today.getDate() - currentStreak));
+
+            let dayClass = "w-8 h-8 flex items-center justify-center rounded-full mx-auto text-xs font-semibold ";
+            
+            if (isActiveStreak) {
+                dayClass += "bg-amber-400 text-white font-bold shadow-sm";
+            } else if (isToday) {
+                dayClass += "border-2 border-pink-400 text-pink-500";
+            } else {
+                dayClass += "text-gray-600 hover:bg-gray-100";
+            }
+
+            calendarDays.innerHTML += `<div class="${dayClass}">${day}</div>`;
+        }
     }
-}
-</script>
+    </script>
 
 </body>
 </html>

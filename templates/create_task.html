@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Task</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="form-container">
+
+        <h1>Create a Task</h1>
+
+        <p>Study Session: {{ session.title }}</p>
+
+        <form method="POST">
+
+            <label for="title">Task:</label>
+
+            <input type="text" id="title" name="title" required>
+
+            <button type="submit">Add Task</button>
+
+        </form>
+
+        <a href="{{ url_for('view_tasks') }}">
+            <button type="button">View All Tasks</button>
+        </a>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Tasks</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="tasks-container">
+
+        <h1>My Tasks</h1>
+
+        {% for session in sessions %}
+
+        <section class="task-session">
+
+            <h2>{{ session.title }}</h2>
+
+            <p class="progress-text">
+                Progress: {{ "%.2f"|format(session.progress) }}% completed
+            </p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ session.progress }}%;"></div>
+            </div>
+
+            {% if session.tasks %}
+
+            <div class="task-section">
+
+                <h3>Upcoming</h3>
+
+                {% for task in session.tasks %}
+                {% if task.status == "upcoming" %}
+
+                <div class="task-item">
+                    <span>{{ task.title }}</span>
+
+                    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
+                        <button type="submit">Start Task</button>
+                    </form>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
+
+            <div class="task-section">
+
+                <h3>Ongoing</h3>
+
+                {% for task in session.tasks %}
+                {% if task.status == "ongoing" %}
+
+                <div class="task-item">
+                    <span>{{ task.title }}</span>
+
+                    <form method="POST"
+                        action="{{ url_for('update_task_status', task_id=task.id, status='completed') }}">
+                        <button type="submit">Complete Task</button>
+                    </form>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
+
+            <div class="task-section">
+
+                <h3>Completed</h3>
+
+                {% for task in session.tasks %}
+                {% if task.status == "completed" %}
+
+                <div class="task-item completed-task">
+                    <span>{{ task.title }}</span>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <p>No tasks for this session.</p>
+
+            {% endif %}
+
+        </section>
+
+        {% else %}
+
+        <p>No study sessions created yet.</p>
+
+        {% endfor %}
+
+    </main>
+
+</body>
+
+</html>

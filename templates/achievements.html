@@ -20,7 +20,7 @@
             <a href="{{ url_for('home') }}" class="text-pink-500 font-bold hover:underline">← Dashboard</a>
         </div>
 
-        <!-- Progress Bar Banner -->
+        <!-- Dynamic Progress Bar Banner -->
         <div class="bg-gradient-to-r from-pink-100 to-amber-100 rounded-2xl p-6 mb-8 border border-pink-200 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
                 <span class="text-xs font-bold uppercase tracking-wider text-pink-500">Your Progress</span>
@@ -39,29 +39,31 @@
             {% if achievements %}
                 {% for achievement in achievements %}
                 {% set is_unlocked = achievement.id in unlocked_ids %}
-                <div class="flex items-center p-5 rounded-2xl border transition-all duration-200 {% if is_unlocked %}bg-amber-50/60 border-amber-200 shadow-sm{% else %}bg-gray-50 border-gray-100 opacity-60{% endif %}">
+                <div class="flex items-center p-5 rounded-2xl border transition-all duration-200 {% if is_unlocked %}bg-amber-50/60 border-amber-200 shadow-sm{% else %}bg-gray-50 border-gray-100 opacity-75{% endif %}">
                     
                     <!-- Icon -->
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mr-4 {% if is_unlocked %}bg-amber-100{% else %}bg-gray-200{% endif %}">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mr-4 shrink-0 {% if is_unlocked %}bg-amber-100{% else %}bg-gray-200 grayscale opacity-60{% endif %}">
                         {{ achievement.icon }}
                     </div>
 
                     <!-- Details -->
-                    <div class="flex-1">
-                        <h3 class="font-bold text-lg text-gray-800">{{ achievement.title }}</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">{{ achievement.description }}</p>
+                    <div class="flex-1 min-w-0 pr-2">
+                        <h3 class="font-bold text-base text-gray-800 truncate">{{ achievement.title }}</h3>
+                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ achievement.description }}</p>
                     </div>
 
-                    <!-- Unlock Status Badge -->
-                    <div class="ml-3">
+                    <!-- Unlock Status Badge & Coin Reward -->
+                    <div class="ml-auto text-right shrink-0">
                         {% if is_unlocked %}
-                            <span class="text-xs font-bold bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
+                            <span class="text-xs font-bold bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full inline-flex items-center gap-1 shadow-sm">
                                 Unlocked ✨
                             </span>
+                            <p class="text-[10px] font-semibold text-amber-600 mt-1">+{{ achievement.coin_reward }} 🪙 earned</p>
                         {% else %}
-                            <span class="text-xs font-bold bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full flex items-center gap-1">
+                            <span class="text-xs font-bold bg-pink-100 text-pink-600 px-3 py-1.5 rounded-full inline-flex items-center gap-1 border border-pink-200">
                                 +{{ achievement.coin_reward }} 🪙
                             </span>
+                            <p class="text-[10px] font-semibold text-gray-400 mt-1">Locked</p>
                         {% endif %}
                     </div>
                 </div>

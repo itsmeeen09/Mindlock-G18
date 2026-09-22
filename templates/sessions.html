@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Study Sessions</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="sessions-container">
+
+        <h1>My Study Sessions</h1>
+
+        {% for session in sessions %}
+
+        <section class="session-card">
+
+            <h2>{{ session.title }}</h2>
+
+            {% if session.tasks %}
+
+            <ul class="session-tasks">
+
+                {% for task in session.tasks %}
+                <li>{{ task.title }}</li>
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>No tasks added yet.</p>
+
+            {% endif %}
+
+            <div class="session-actions">
+
+                <a href="{{ url_for('create_task', session_id=session.id) }}">
+                    <button type="button">Add Task</button>
+                </a>
+
+                <a href="{{ url_for('focus_mode', session_id=session.id) }}">
+                    <button type="button">Start Focus Mode</button>
+                </a>
+
+            </div>
+
+        </section>
+
+        {% else %}
+
+        <p>No study sessions created yet.</p>
+
+        {% endfor %}
+
+    </main>
+
+</body>
+
+</html>
