@@ -37,11 +37,13 @@
                 {% if task.status == "upcoming" %}
 
                 <div class="task-item">
+
                     <span>{{ task.title }}</span>
 
                     <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
                         <button type="submit">Start Task</button>
                     </form>
+
                 </div>
 
                 {% endif %}
@@ -58,12 +60,14 @@
                 {% if task.status == "ongoing" %}
 
                 <div class="task-item">
+
                     <span>{{ task.title }}</span>
 
                     <form method="POST"
                         action="{{ url_for('update_task_status', task_id=task.id, status='completed') }}">
                         <button type="submit">Complete Task</button>
                     </form>
+
                 </div>
 
                 {% endif %}
@@ -77,10 +81,26 @@
                 <h3>Completed</h3>
 
                 {% for task in session.tasks %}
+
                 {% if task.status == "completed" %}
 
                 <div class="task-item completed-task">
+
                     <span>{{ task.title }}</span>
+
+                    <details>
+
+                        <summary>Actions</summary>
+
+                        <form method="POST"
+                            action="{{ url_for('update_task_status', task_id=task.id, status='upcoming') }}">
+                            <button type="submit">Redo Task</button>
+                        </form>
+
+                        <button type="button">Delete Task</button>
+
+                    </details>
+
                 </div>
 
                 {% endif %}
@@ -114,8 +134,10 @@
             </a>
 
         </div>
+
     </main>
 
 </body>
 
 </html>
+```
