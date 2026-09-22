@@ -4,6 +4,7 @@
 <head>
     <title>Create Task</title>
 
+    <!-- Connect this page to the main MindLock stylesheet. -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -13,18 +14,45 @@
 
         <h1>Create a Task</h1>
 
+        <!-- Show which study session this task belongs to. -->
         <p>Study Session: {{ session.title }}</p>
 
         <form method="POST">
 
+            <!-- Ask the user to enter the task name. -->
             <label for="title">Task:</label>
 
             <input type="text" id="title" name="title" required>
 
+            <br><br>
+
+            <!-- Ask the user how much time they want to spend on this task. -->
+            <label for="duration">Task Duration:</label>
+
+            <select id="duration" name="duration" required>
+
+                <option value="1">1 minute</option>
+                <option value="2">2 minutes</option>
+                <option value="5">5 minutes</option>
+                <option value="10">10 minutes</option>
+                <option value="15">15 minutes</option>
+                <option value="20">20 minutes</option>
+                <option value="30" selected>30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">60 minutes</option>
+
+            </select>
+
+            <br><br>
+
+            <!-- Submit the new task. -->
             <button type="submit">Add Task</button>
 
         </form>
 
+        <br>
+
+        <!-- Take the user to the page showing all tasks. -->
         <a href="{{ url_for('view_tasks') }}">
             <button type="button">View All Tasks</button>
         </a>

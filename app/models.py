@@ -38,6 +38,9 @@ class Task(db.Model):
     # Name/description of the task.
     title = db.Column(db.String(200), nullable=False)
 
+    # Store how many minutes the task should take.
+    duration = db.Column(db.Integer, nullable=False, default=30)
+
     # Stores whether the task has been completed.
     completed = db.Column(db.Boolean, default=False)
 
@@ -47,3 +50,11 @@ class Task(db.Model):
     # Stores the ID of the study session this task belongs to.
     study_session_id = db.Column(db.Integer, db.ForeignKey(
         "study_session.id"), nullable=False)
+
+    # Store the remaining time in seconds when the task is paused.
+    remaining_time = db.Column(db.Integer, nullable=False, default=0)
+
+    # Connect the task to its study session.
+    study_session_id = db.Column(
+        db.Integer, db.ForeignKey("study_session.id"), nullable=False
+    )

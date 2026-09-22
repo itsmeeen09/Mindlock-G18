@@ -94,31 +94,48 @@ def create_app():
     @app.route("/tasks/create/<int:session_id>", methods=["GET", "POST"])
     def create_task(session_id):
 
-        # Find the study session this task belongs to.
+        # Find the study session that this task belongs to.
         session = StudySession.query.get_or_404(session_id)
 
-        # If the user submitted the form...
+    # Check if the user submitted the form.
         if request.method == "POST":
 
             # Get the task title from the form.
             title = request.form["title"]
 
-            # Create a new task and connect it to the study session.
-            task = Task(title=title, study_session_id=session.id)
+        # Get the task duration from the form.
+            duration = int(request.form["duration"])
 
-            # Add the new task to the database.
+        # Create a new task with the title and selected duration.
+            task = Task(
+                title=title,
+                duration=duration,
+                study_session_id=session.id
+            )
+
+        # Add the new task to the database.
             db.session.add(task)
 
-            # Save the task.
+        # Save the new task.
             db.session.commit()
 
-            # Send the user back to the sessions page.
+        # Return to the My Study Sessions page.
             return redirect(url_for("view_sessions"))
 
-        # Display the task creation page.
+    # Show the Create Task page.
         return render_template("create_task.html", session=session)
+    # Route for Focus Mode.
 
-        # Route for Focus Mode.
+    # Route for Focus Mode for an individual task.
+    @app.route("/tasks/<int:task_id>/focus")
+    def task_focus_mode(task_id):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Display the Task Focus Mode page.
+        return render_template("task_focus_mode.html", task=task)
+
     @app.route("/sessions/<int:session_id>/focus")
     def focus_mode(session_id):
 
@@ -128,7 +145,71 @@ def create_app():
         # Display the Focus Mode page.
         return render_template("focus_mode.html", session=session)
 
-        # Route for starting a study session.
+    # Route for starting an individual task.
+    @app.route("/tasks/<int:task_id>/start", methods=["POST"])
+    def start_task(task_id):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Change the task status to ongoing.
+        task.status = "ongoing"
+
+        # Make sure the task is not marked as completed.
+        task.completed = False
+
+        # Save the changes to the database.
+        db.session.commit()
+
+        # Send the user to Focus Mode for this specific task.
+        return redirect(url_for("task_focus_mode", task_id=task.id))
+
+    # Route for pausing an individual task.
+    @app.route("/tasks/<int:task_id>/pause", methods=["POST"])
+    def pause_task(task_id):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Get the remaining time from the Focus Mode timer.
+        remaining_time = request.form.get("remaining_time", type=int)
+
+        # Keep the task as ongoing.
+        task.status = "ongoing"
+
+        # Save the remaining time.
+        task.remaining_time = remaining_time
+
+        # Save the changes to the database.
+        db.session.commit()
+
+        # Return to Task Focus Mode.
+        return redirect(url_for("task_focus_mode", task_id=task.id))
+
+    # Route for completing an individual task.
+    @app.route("/tasks/<int:task_id>/complete", methods=["POST"])
+    def complete_task(task_id):
+
+        # Find the task.
+        task = Task.query.get_or_404(task_id)
+
+        # Mark the task as completed.
+        task.status = "completed"
+
+        # Keep the completed field in sync.
+        task.completed = True
+
+        # Set the remaining time to zero.
+        task.remaining_time = 0
+
+        # Save the changes to the database.
+        db.session.commit()
+
+        # Return to the My Tasks page.
+        return redirect(url_for("view_tasks"))
+
+# Route for starting a study session.
+
     @app.route("/sessions/<int:session_id>/start", methods=["POST"])
     def start_session(session_id):
 

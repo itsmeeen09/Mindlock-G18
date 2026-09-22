@@ -24,7 +24,9 @@
             </p>
 
             <div class="progress-bar">
-                <div class="progress-fill" style="width: {{ session.progress }}%;"></div>
+                <div class="progress-fill" style="width: {{ session.progress }}%;">
+
+                </div>
             </div>
 
             {% if session.tasks %}
@@ -40,7 +42,7 @@
 
                     <span>{{ task.title }}</span>
 
-                    <form method="POST" action="{{ url_for('update_task_status', task_id=task.id, status='ongoing') }}">
+                    <form method="POST" action="{{ url_for('start_task', task_id=task.id) }}">
                         <button type="submit">Start Task</button>
                     </form>
 
@@ -142,4 +144,3 @@
 </body>
 
 </html>
-```

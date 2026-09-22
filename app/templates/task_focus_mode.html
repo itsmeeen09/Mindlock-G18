@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task Focus Mode</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <main class="focus-container">
+
+        <p class="focus-label">FOCUS MODE</p>
+
+        <!-- Show the task the user chose to work on. -->
+        <h1>{{ task.title }}</h1>
+
+        <!-- Use this task's individual duration for the timer. -->
+        <div id="timer" class="focus-timer" data-duration="{{ task.duration }}"
+            data-remaining="{{ task.remaining_time }}">
+            00:00
+        </div>
+
+        <p class="focus-status">
+            Status: <span id="status">{{ task.status }}</span>
+        </p>
+
+        <div class="focus-actions">
+
+            <button id="startButton" type="button">Start</button>
+
+            <button id="pauseButton" type="button">Pause</button>
+
+            <form method="POST" action="{{ url_for('complete_task', task_id=task.id) }}">
+                <button id="endButton" type="submit">Complete Task</button>
+            </form>
+
+        </div>
+
+        <a class="tasks-link" href="{{ url_for('view_tasks') }}">
+            View My Tasks
+        </a>
+
+        <a class="sessions-link" href="{{ url_for('view_sessions') }}">
+            ← Back to My Sessions
+        </a>
+
+    </main>
+
+    <script>
+
+        // Get the timer element from the page.
+        const timer = document.getElementById("timer");
+
+        // Get any saved remaining time from the database.
+        let savedTime = Number(timer.dataset.remaining);
+
+        // If there is saved time, continue from there.
+        // Otherwise, start with this task's full duration.
+        let timeLeft = savedTime > 0
+            ? savedTime
+            : Number(timer.dataset.duration) * 60;
+
+        // Store the timer interval.
+        let timerInterval = null;
+
+        // Get the buttons and status text.
+        const startButton = document.getElementById("startButton");
+        const pauseButton = document.getElementById("pauseButton");
+        const status = document.getElementById("status");
+        const endButton = document.getElementById("endButton");
+
+        // Update the timer display.
+        function updateTimer() {
+
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            timer.textContent =
+                String(minutes).padStart(2, "0") + ":" +
+                String(seconds).padStart(2, "0");
+        }
+
+        // Start the task timer.
+        startButton.addEventListener("click", function () {
+
+            // Do not start another timer if one is already running.
+            if (timerInterval !== null) {
+                return;
+            }
+
+            status.textContent = "ongoing";
+
+            timerInterval = setInterval(function () {
+
+                if (timeLeft > 0) {
+
+                    timeLeft--;
+                    updateTimer();
+
+
+
+                } else {
+
+                    // Stop the timer.
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+
+                    // Automatically complete the task when the timer reaches zero.
+                    fetch("{{ url_for('complete_task', task_id=task.id) }}", {
+                        method: "POST"
+                    }).then(function () {
+
+                        // Return to My Tasks after completing the task.
+                        window.location.href = "{{ url_for('view_tasks') }}";
+
+                    });
+
+                }
+
+            }, 1000);
+
+        });
+
+        // Pause the task timer.
+        pauseButton.addEventListener("click", function () {
+
+            // Stop the timer.
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            // Create form data to send the remaining time.
+            const formData = new FormData();
+
+            // Save the remaining seconds.
+            formData.append("remaining_time", timeLeft);
+
+            // Send the remaining time to the server.
+            fetch("{{ url_for('pause_task', task_id=task.id) }}", {
+                method: "POST",
+                body: formData
+            });
+
+            // Update the status on the page.
+            status.textContent = "paused";
+
+        });
+
+        // Complete the task.
+        endButton.addEventListener("click", function () {
+
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            status.textContent = "completed";
+
+        });
+
+        // Show the correct starting time when the page loads.
+        updateTimer();
+
+    </script>
+
+</body>
+
+</html>
