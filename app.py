@@ -203,33 +203,38 @@ def check_and_award_achievements(user_id, session_data=None):
 @app.route('/')
 def index():
     total_hours = 0
+    progress = 100
     unlocked_count = 0
-    total_achievements = 8
-    accuracy = 100  # Default to 100% if no sessions exist yet
+    total_achievements = 2
 
     if current_user.is_authenticated:
+        # Reset theme to pink if matcha/green is stored
+        if getattr(current_user, 'theme', None) == 'matcha':
+            current_user.theme = 'pink'
+            db.session.commit()
+
         # Calculate focus hours
         if hasattr(current_user, 'focus_sessions') and current_user.focus_sessions:
             sessions = current_user.focus_sessions
             total_minutes = sum(s.duration for s in sessions if getattr(s, 'completed', True))
             total_hours = round(total_minutes / 60, 1)
 
-            # Calculate Accuracy %
+            # Calculate Progress %
             total_started = len(sessions)
             total_completed = len([s for s in sessions if getattr(s, 'completed', False)])
             if total_started > 0:
-                accuracy = round((total_completed / total_started) * 100)
+                progress = round((total_completed / total_started) * 100)
 
-        # Count unlocked achievements
+        # Count unlocked achievements (only active presentation badges 1 and 2)
         if hasattr(current_user, 'achievements') and current_user.achievements:
-            unlocked_count = len(current_user.achievements)
+            unlocked_count = len([a for a in current_user.achievements if a.id in [1, 2]])
 
     return render_template(
         'index.html',
         total_hours=total_hours,
         unlocked_count=unlocked_count,
         total_achievements=total_achievements,
-        accuracy=accuracy
+        progress=progress
     )
 
 @app.route('/shop')
@@ -257,8 +262,8 @@ def stats():
     total_minutes = total_sessions * 25
     total_hours = round(total_minutes / 60, 1)
     
-    # Default accuracy %
-    accuracy = 100
+    # Default progress %
+    progress = 100
 
     return render_template(
         'stats.html', 
@@ -269,14 +274,24 @@ def stats():
         achievements=all_achievements,
         unlocked_ids=unlocked_ids,
         total_hours=total_hours,
-        accuracy=accuracy
+        progress=progress
     )
 
 @app.route('/achievements')
 @login_required
 def achievements():
-    all_achievements = Achievement.query.all()
-    user_unlocks = UserAchievement.query.filter_by(user_id=current_user.id).all()
+    # 1. Fetch only the 2 achievements you want to present
+    all_achievements = Achievement.query.filter(Achievement.id.in_([1, 2])).all()
+    
+    # 2. Get the list of IDs currently being displayed ([1, 2])
+    visible_ids = [a.id for a in all_achievements]
+
+    # 3. Only count unlocks that match the visible achievements!
+    user_unlocks = UserAchievement.query.filter(
+        UserAchievement.user_id == current_user.id,
+        UserAchievement.achievement_id.in_(visible_ids)
+    ).all()
+    
     unlocked_ids = [ua.achievement_id for ua in user_unlocks]
 
     return render_template(
@@ -286,9 +301,8 @@ def achievements():
     )
 
 @app.route('/timer')
-@login_required
 def timer():
-    return render_template('timer.html', has_2hr_pass=current_user.has_2hr_pass)
+    return redirect(url_for('index'))  # Redirects straight to your dashboard!
 
 @app.route('/purchase/<string:item_type>/<string:item_id>', methods=['POST'])
 @login_required
@@ -529,7 +543,7 @@ def set_theme():
 
     unlocked = current_user.unlocked_themes.split(',') if current_user.unlocked_themes else ['pastel']
 
-    if theme_id == 'pastel' or theme_id in unlocked:
+    if theme_id in ['pastel', 'pink', 'sakura', 'default'] or theme_id in unlocked:
         current_user.theme = theme_id
         db.session.commit()
         return jsonify({'success': True, 'message': f'Theme changed to {theme_id}!'})

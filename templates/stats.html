@@ -62,7 +62,7 @@
         </div>
 
 <!-- 🏆 Achievements Section -->
-        <div class="flex justify-between items-center mb-4">
+<div class="flex justify-between items-center mb-4">
             <a href="{{ url_for('achievements') }}" class="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <h2 class="text-xl font-bold text-gray-700 flex items-center gap-2">
                     🏆 Achievements
@@ -73,7 +73,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {% if achievements %}
-                {% for achievement in achievements %}
+                {% for achievement in achievements if achievement.id in [1, 2] %}
                 <a href="{{ url_for('achievements') }}" class="flex items-center p-4 rounded-2xl border transition-all duration-200 hover:scale-[1.01] {% if achievement.id in unlocked_ids %}bg-amber-50 border-amber-200{% else %}bg-gray-50 border-gray-100 opacity-60{% endif %}">
                     <span class="text-3xl mr-4">{{ achievement.icon }}</span>
                     <div class="flex-1">

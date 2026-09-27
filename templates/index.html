@@ -217,21 +217,6 @@ body.theme-midnight .theme-btn {
                         🌸 Pink
                     </button>
 
-                    <button onclick="previewTheme('matcha', '100 Coins', {{ 'true' if current_user.is_authenticated and 'matcha' in (current_user.unlocked_themes or '') else 'false' }})" 
-                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
-                        🍵 Matcha
-                    </button>
-
-                    <button onclick="previewTheme('sakura', '80 Coins', {{ 'true' if current_user.is_authenticated and 'sakura' in (current_user.unlocked_themes or '') else 'false' }})" 
-                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-rose-100 text-rose-800 hover:bg-rose-200">
-                        🌺 Sakura
-                    </button>
-
-                    <button onclick="previewTheme('lavender', '120 Coins', {{ 'true' if current_user.is_authenticated and 'lavender' in (current_user.unlocked_themes or '') else 'false' }})" 
-                            class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-purple-100 text-purple-800 hover:bg-purple-200">
-                        🪻 Lavender
-                    </button>
-
                     <button onclick="previewTheme('sunset', '150 Coins', {{ 'true' if current_user.is_authenticated and 'sunset' in (current_user.unlocked_themes or '') else 'false' }})" 
                             class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-orange-100 text-orange-800 hover:bg-amber-200">
                         🌆 Sunset
@@ -274,8 +259,8 @@ body.theme-midnight .theme-btn {
                         <p class="text-xl font-bold theme-text">{{ total_hours }} Hrs</p>
                     </div>
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
-                        <p class="text-xs theme-text font-bold opacity-80">ACCURACY</p>
-                        <p class="text-xl font-bold theme-text">{{ accuracy }}%</p>
+                        <p class="text-xs theme-text font-bold opacity-80">PROGRESS</p>
+                        <p class="text-xl font-bold theme-text">{{ progress }}%</p>
                     </div>
                     <div class="stat-box p-3 rounded-2xl border transition-all duration-300">
                         <p class="text-xs theme-text font-bold opacity-80">BADGES</p>
@@ -288,36 +273,32 @@ body.theme-midnight .theme-btn {
                 </div>
             </a>
 
-            <!-- RIGHT: REWARDS SHOP PREVIEW (CLICKABLE CARD TO /SHOP) -->
-            <a href="{{ url_for('shop') }}" class="inner-card block border-2 rounded-[25px] p-5 space-y-3 hover:shadow-md transition cursor-pointer no-underline duration-300">
-                <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-lg font-bold theme-text flex items-center gap-2 transition-colors">
-                        <span>🎁</span> Study Rewards
-                    </h3>
-                    <span class="text-[11px] font-bold bg-pink-200 text-pink-600 px-2.5 py-0.5 rounded-full">Max 2 Hrs/Pass</span>
+<!-- RIGHT: REWARDS SHOP PREVIEW (CLICKABLE CARD TO /SHOP) -->
+            <a href="{{ url_for('shop') }}" class="inner-card flex flex-col justify-between border-2 rounded-[25px] p-5 hover:shadow-md transition cursor-pointer no-underline duration-300">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold theme-text flex items-center gap-2 transition-colors">
+                            <span>🎁</span> Study Rewards
+                        </h3>
+                        <span class="text-[11px] font-bold bg-pink-200 text-pink-600 px-2.5 py-0.5 rounded-full">Max 2 Hrs/Pass</span>
+                    </div>
+
+                    <!-- PASS ITEM 1 -->
+                    <div class="stat-box p-4 rounded-2xl border flex items-center justify-between transition-all duration-300">
+                        <div>
+                            <p class="font-bold theme-text text-sm">2-Hour Focus Pass</p>
+                            <p class="text-xs text-amber-500 font-bold mt-0.5">🪙 100 Coins</p>
+                        </div>
+                        <span class="theme-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition inline-block">
+                            Redeem
+                        </span>
+                    </div>
                 </div>
 
-                <!-- PASS ITEM 1 -->
-                <div class="stat-box p-3.5 rounded-2xl border flex items-center justify-between transition-all duration-300">
-                    <div>
-                        <p class="font-bold theme-text text-sm">2-Hour Focus Pass</p>
-                        <p class="text-xs text-amber-500 font-bold">🪙 100 Coins</p>
-                    </div>
-                    <span class="theme-btn text-white text-xs font-bold px-4 py-2 rounded-xl transition inline-block">
-                        Redeem
-                    </span>
-                </div>
-
-                <!-- PASS ITEM 2 (LOCKED) -->
-                <div class="stat-box p-3.5 rounded-2xl border flex items-center justify-between opacity-60 transition-all duration-300">
-                    <div>
-                        <p class="font-bold theme-text text-sm">Weekend Break Pass</p>
-                        <p class="text-xs text-amber-500 font-bold">🪙 500 Coins</p>
-                    </div>
-                    <span class="bg-gray-200 text-gray-400 text-xs font-bold px-4 py-2 rounded-xl">
-                        🔒 Locked
-                    </span>
-                </div>
+                <!-- BOTTOM CAPTION TO FILL HEIGHT CLEANLY -->
+                <p class="text-[11px] text-center opacity-60 font-medium pt-3 m-0">
+                    Click card to open full rewards shop ✨
+                </p>
             </a>
 
         </div>
@@ -370,7 +351,13 @@ body.theme-midnight .theme-btn {
             document.getElementById('preview-bar').classList.add('hidden');
         }
 
-        function applyTheme(themeId) {
+function applyTheme(themeId) {
+            // Force pink/default themes to apply immediately
+            if (['pink', 'default', 'sakura'].includes(themeId)) {
+                document.documentElement.setAttribute('data-theme', themeId);
+                localStorage.setItem('theme', themeId);
+            }
+
             fetch('/api/set-theme', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -381,7 +368,12 @@ body.theme-midnight .theme-btn {
                 if (data.success) {
                     location.reload();
                 } else {
-                    alert(data.message);
+                    // Fallback for default themes if backend rejects it
+                    if (['pink', 'default', 'sakura'].includes(themeId)) {
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
                 }
             })
             .catch(err => console.error("Error setting theme:", err));
