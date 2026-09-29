@@ -1,0 +1,82 @@
+:root,
+[data-theme="pink"],
+[data-theme="sakura"],
+[data-theme="default"] {
+    --bg-main: #fff0f3;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --border-color: #ffe0e6;
+    --text-primary: #854d0e;
+    --text-secondary: #9f1239;
+    --accent-main: #f43f5e;
+    --accent-hover: #e11d48;
+    --badge-bg: #ffe4e6;
+    --badge-text: #e11d48;
+}
+
+[data-theme="sunset"] {
+    --bg-main: #fff7ed;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --border-color: #ffedd5;
+    --text-primary: #9a3412;
+    --text-secondary: #c2410c;
+    --accent-main: #f97316;
+    --accent-hover: #ea580c;
+    --badge-bg: #ffedd5;
+    --badge-text: #c2410c;
+}
+
+[data-theme="midnight"] {
+    --bg-main: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.85);
+    --border-color: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --accent-main: #6366f1;
+    --accent-hover: #4f46e5;
+    --badge-bg: #312e81;
+    --badge-text: #a5b4fc;
+}
+
+/* --------------------------------------------------------------------------
+   2. Core Application Layout & Dynamic Theme Overrides
+   -------------------------------------------------------------------------- */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+
+.inner-card,
+.stat-box {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.theme-text {
+    color: var(--text-secondary);
+}
+
+.theme-btn {
+    background-color: var(--accent-main);
+}
+
+.theme-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+/* --------------------------------------------------------------------------
+   3. Custom Utilities
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 9999px;
+}
