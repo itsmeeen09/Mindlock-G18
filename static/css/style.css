@@ -37,9 +37,7 @@
     --badge-text: #a5b4fc;
 }
 
-/* --------------------------------------------------------------------------
-   2. Core Application Layout & Dynamic Theme Overrides
-   -------------------------------------------------------------------------- */
+/* 2. Core Application Layout & Dynamic Theme Overrides */
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
@@ -67,9 +65,7 @@ body {
     background-color: var(--accent-hover);
 }
 
-/* --------------------------------------------------------------------------
-   3. Custom Utilities
-   -------------------------------------------------------------------------- */
+/*3. Custom Utilities */
 ::-webkit-scrollbar {
     width: 8px;
 }
