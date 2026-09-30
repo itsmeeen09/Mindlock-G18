@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Create Study Session</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Page heading -->
+    <h1>Create a Study Session</h1>
+
+
+    <!-- Form for creating a new study session -->
+    <form method="POST">
+
+        <!-- Label for the session title -->
+        <label for="title">Session Title:</label>
+
+        <!-- Input where the user enters the session title -->
+        <input type="text" id="title" name="title" required>
+
+        <br><br>
+
+
+        <!-- Button to submit the form -->
+        <button type="submit">Create Session</button>
+
+    </form>
+
+    <div class="form-navigation">
+
+        <a href="{{ url_for('study_home') }}">
+            &lt;- Back to Home
+        </a>
+
+        <a href="{{ url_for('view_sessions') }}">
+            View My Sessions
+        </a>
+
+    </div>
+</body>
+
+</html>
+
+
+
+
+

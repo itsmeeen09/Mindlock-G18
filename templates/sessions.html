@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Study Sessions</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <main class="sessions-container">
+
+        <h1>My Study Sessions</h1>
+
+        {% for session in sessions %}
+
+        <section class="session-card">
+
+            <h2>{{ session.title }}</h2>
+
+            {% if session.tasks %}
+
+            <ul class="session-tasks">
+
+                {% for task in session.tasks %}
+                <li>{{ task.title }}</li>
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>No tasks added yet.</p>
+
+            {% endif %}
+
+            <div class="session-actions">
+
+                <a href="{{ url_for('create_task', session_id=session.id) }}">
+                    <button type="button">Add Task</button>
+                </a>
+
+                <form method="POST" action="{{ url_for('delete_session', session_id=session.id) }}">
+                    <button type="submit">Delete Session</button>
+                </form>
+            </div>
+
+        </section>
+
+        {% else %}
+
+        <p>No study sessions created yet.</p>
+
+        {% endfor %}
+
+
+        <div class="sessions-navigation">
+
+            <a href="{{ url_for('study_home') }}">
+                &lt;- Back to Home
+            </a>
+
+            <a href="{{ url_for('view_tasks') }}">
+                View My Tasks
+            </a>
+
+        </div>
+    </main>
+
+
+</body>
+
+</html>
+
+
+
+
+
