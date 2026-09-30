@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Fredoka', sans-serif; } </style>
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-pink-50 p-8 text-gray-700 min-h-screen">
     <div class="max-w-3xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-pink-100">
-        
+
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-pink-400">📊 Focus Statistics</h1>
-            <a href="{{ url_for('index') }}" class="text-pink-500 font-bold hover:underline">← Dashboard</a>
+            <a href="{{ url_for('study_home') }}" class="text-pink-500 font-bold hover:underline">← Dashboard</a>
         </div>
 
         <!-- Summary Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            
+
             <!-- 🔥 Streak Card -->
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-center">
                 <span class="text-sm font-bold text-amber-600">Current Streak</span>
-                <p class="text-3xl font-bold text-amber-500 mt-1">🔥 {{ current_user.streak_info.current_streak if current_user.streak_info else 0 }} Days</p>
+                <p class="text-3xl font-bold text-amber-500 mt-1">🔥 {{ current_user.streak_info.current_streak if
+                    current_user.streak_info else 0 }} Days</p>
             </div>
 
             <div class="bg-rose-50 border border-pink-200 rounded-2xl p-5 text-center">
                 <span class="text-sm font-bold text-pink-400">Current Balance</span>
                 <p class="text-3xl font-bold text-amber-500 mt-1">🪙 {{ current_user.coins }}</p>
             </div>
-            
+
             <div class="bg-purple-50 border border-purple-200 rounded-2xl p-5 text-center">
                 <span class="text-sm font-bold text-purple-400">Total Coins Earned</span>
                 <p class="text-3xl font-bold text-purple-600 mt-1">✨ {{ total_earned }}</p>
@@ -47,24 +54,26 @@
         <h2 class="text-xl font-bold text-gray-700 mb-4">📜 Recent Sessions</h2>
         <div class="space-y-3 mb-8">
             {% if logs %}
-                {% for log in logs|reverse %}
-                <div class="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-xl">
-                    <div>
-                        <p class="font-bold text-gray-700">{{ log.reason }}</p>
-                    </div>
-                    <span class="text-amber-500 font-bold bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg">
-                        +{{ log.amount }} Coins 🪙
-                    </span>
+            {% for log in logs|reverse %}
+            <div class="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-xl">
+                <div>
+                    <p class="font-bold text-gray-700">{{ log.reason }}</p>
                 </div>
-                {% endfor %}
+                <span class="text-amber-500 font-bold bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg">
+                    +{{ log.amount }} Coins 🪙
+                </span>
+            </div>
+            {% endfor %}
             {% else %}
-                <p class="text-gray-400 text-center py-6">No completed sessions yet! Start the timer to earn your first coins. 🌸</p>
+            <p class="text-gray-400 text-center py-6">No completed sessions yet! Start the timer to earn your first
+                coins. 🌸</p>
             {% endif %}
         </div>
 
-<!-- 🏆 Achievements Section -->
-<div class="flex justify-between items-center mb-4">
-            <a href="{{ url_for('achievements') }}" class="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <!-- 🏆 Achievements Section -->
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ url_for('achievements') }}"
+                class="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <h2 class="text-xl font-bold text-gray-700 flex items-center gap-2">
                     🏆 Achievements
                     <span class="text-xs text-pink-500 font-semibold group-hover:underline ml-1">View All →</span>
@@ -74,24 +83,27 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {% if achievements %}
-                {% for achievement in achievements if achievement.id in [1, 2] %}
-                <a href="{{ url_for('achievements') }}" class="flex items-center p-4 rounded-2xl border transition-all duration-200 hover:scale-[1.01] {% if achievement.id in unlocked_ids %}bg-amber-50 border-amber-200{% else %}bg-gray-50 border-gray-100 opacity-60{% endif %}">
-                    <span class="text-3xl mr-4">{{ achievement.icon }}</span>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-gray-800">{{ achievement.title }}</h3>
-                        <p class="text-xs text-gray-500">{{ achievement.description }}</p>
-                    </div>
-                    {% if achievement.id in unlocked_ids %}
-                        <span class="text-xs font-bold bg-amber-200 text-amber-800 px-2.5 py-1 rounded-full">Unlocked ✨</span>
-                    {% else %}
-                        <span class="text-xs font-bold bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full">+{{ achievement.coin_reward }} 🪙</span>
-                    {% endif %}
-                </a>
-                {% endfor %}
+            {% for achievement in achievements if achievement.id in [1, 2] %}
+            <a href="{{ url_for('achievements') }}"
+                class="flex items-center p-4 rounded-2xl border transition-all duration-200 hover:scale-[1.01] {% if achievement.id in unlocked_ids %}bg-amber-50 border-amber-200{% else %}bg-gray-50 border-gray-100 opacity-60{% endif %}">
+                <span class="text-3xl mr-4">{{ achievement.icon }}</span>
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-800">{{ achievement.title }}</h3>
+                    <p class="text-xs text-gray-500">{{ achievement.description }}</p>
+                </div>
+                {% if achievement.id in unlocked_ids %}
+                <span class="text-xs font-bold bg-amber-200 text-amber-800 px-2.5 py-1 rounded-full">Unlocked ✨</span>
+                {% else %}
+                <span class="text-xs font-bold bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full">+{{
+                    achievement.coin_reward }} 🪙</span>
+                {% endif %}
+            </a>
+            {% endfor %}
             {% else %}
-                <p class="text-gray-400 text-center py-4 col-span-2">No achievements setup yet!</p>
+            <p class="text-gray-400 text-center py-4 col-span-2">No achievements setup yet!</p>
             {% endif %}
         </div>
     </div>
 </body>
+
 </html>

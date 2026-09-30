@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Mindlock - Rewards Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Fredoka', sans-serif; } </style>
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-pink-50 p-8 text-gray-700">
     <div class="max-w-6xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-pink-100">
-        
+
         <!-- Header / Navigation link back -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-pink-400">🎁 Rewards Store</h1>
+            <a href="{{ url_for('study_home') }}" class="text-pink-500 font-bold hover:underline">
+                ← Home
+            </a>
             <a href="{{ url_for('index') }}" class="text-pink-500 font-bold hover:underline">← Back to Dashboard</a>
         </div>
 
@@ -25,11 +34,13 @@
                 <div>
                     <span class="text-xs bg-pink-200 text-pink-700 px-3 py-1 rounded-full font-bold">Max 2 Hours</span>
                     <h2 class="text-2xl font-bold text-pink-600 mt-2">🎫 Ultimate Study Pass</h2>
-                    <p class="text-sm text-gray-500 mt-1">Unlocks a 120-minute uninterrupted focus session with bonus coin multipliers.</p>
+                    <p class="text-sm text-gray-500 mt-1">Unlocks a 120-minute uninterrupted focus session with bonus
+                        coin multipliers.</p>
                 </div>
                 <div class="mt-6 flex justify-between items-center">
                     <span class="text-lg font-bold text-amber-500">🪙 100 Coins</span>
-                    <button onclick="buy2HrPass()" class="bg-pink-400 hover:bg-pink-500 text-white font-bold px-5 py-2 rounded-xl transition">
+                    <button onclick="buy2HrPass()"
+                        class="bg-pink-400 hover:bg-pink-500 text-white font-bold px-5 py-2 rounded-xl transition">
                         Redeem Pass
                     </button>
                 </div>
@@ -44,47 +55,55 @@
                 </div>
                 <div class="mt-6">
                     {% if current_user.theme == 'sunset' %}
-                        <button disabled class="w-full bg-orange-300 text-white font-bold py-2 rounded-xl text-sm cursor-default">
-                            ✓ Applied
-                        </button>
+                    <button disabled
+                        class="w-full bg-orange-300 text-white font-bold py-2 rounded-xl text-sm cursor-default">
+                        ✓ Applied
+                    </button>
                     {% elif 'sunset' in (current_user.unlocked_themes or '') %}
-                        <button onclick="setTheme('sunset')" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded-xl text-sm transition">
-                            Apply Theme
-                        </button>
+                    <button onclick="setTheme('sunset')"
+                        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded-xl text-sm transition">
+                        Apply Theme
+                    </button>
                     {% else %}
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-bold text-amber-500">🪙 120 Coins</span>
-                            <button onclick="buyIndividualTheme('sunset')" class="bg-orange-400 hover:bg-orange-500 text-white font-bold px-5 py-2 rounded-xl transition">
-                                Unlock
-                            </button>
-                        </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold text-amber-500">🪙 120 Coins</span>
+                        <button onclick="buyIndividualTheme('sunset')"
+                            class="bg-orange-400 hover:bg-orange-500 text-white font-bold px-5 py-2 rounded-xl transition">
+                            Unlock
+                        </button>
+                    </div>
                     {% endif %}
                 </div>
             </div>
 
             <!-- 7. Midnight Focus (150 Coins) -->
-            <div class="border-2 border-indigo-900 rounded-2xl p-6 bg-slate-900 text-white flex flex-col justify-between">
+            <div
+                class="border-2 border-indigo-900 rounded-2xl p-6 bg-slate-900 text-white flex flex-col justify-between">
                 <div>
-                    <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-700 px-3 py-1 rounded-full font-bold">Theme</span>
+                    <span
+                        class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-700 px-3 py-1 rounded-full font-bold">Theme</span>
                     <h2 class="text-2xl font-bold text-indigo-300 mt-2">🌙 Midnight Focus</h2>
                     <p class="text-sm text-slate-400 mt-1">Dark aesthetic mode for night studying.</p>
                 </div>
                 <div class="mt-6">
                     {% if current_user.theme == 'midnight' %}
-                        <button disabled class="w-full bg-slate-800 text-indigo-300 font-bold py-2 rounded-xl text-sm cursor-default">
-                            ✓ Applied
-                        </button>
+                    <button disabled
+                        class="w-full bg-slate-800 text-indigo-300 font-bold py-2 rounded-xl text-sm cursor-default">
+                        ✓ Applied
+                    </button>
                     {% elif 'midnight' in (current_user.unlocked_themes or '') %}
-                        <button onclick="setTheme('midnight')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition">
-                            Apply Theme
-                        </button>
+                    <button onclick="setTheme('midnight')"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-sm transition">
+                        Apply Theme
+                    </button>
                     {% else %}
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-bold text-amber-400">🪙 150 Coins</span>
-                            <button onclick="buyIndividualTheme('midnight')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 rounded-xl transition">
-                                Unlock
-                            </button>
-                        </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold text-amber-400">🪙 150 Coins</span>
+                        <button onclick="buyIndividualTheme('midnight')"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 rounded-xl transition">
+                            Unlock
+                        </button>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -98,19 +117,19 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })
-            .then(res => res.json().then(data => ({ status: res.status, body: data })))
-            .then(res => {
-                if (res.status === 200) {
-                    alert(res.body.message || "2-Hour Focus Pass unlocked! 🌸");
-                    location.reload();
-                } else {
-                    alert(res.body.message || "Failed to redeem pass.");
-                }
-            })
-            .catch(err => {
-                console.error("Error redeeming pass:", err);
-                alert("Something went wrong. Please try again! 🌸");
-            });
+                .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                .then(res => {
+                    if (res.status === 200) {
+                        alert(res.body.message || "2-Hour Focus Pass unlocked! 🌸");
+                        location.reload();
+                    } else {
+                        alert(res.body.message || "Failed to redeem pass.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Error redeeming pass:", err);
+                    alert("Something went wrong. Please try again! 🌸");
+                });
         }
 
         function buyIndividualTheme(themeId) {
@@ -119,12 +138,12 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ theme_id: themeId })
             })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if (data.success) location.reload();
-            })
-            .catch(err => console.error("Error purchasing theme:", err));
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                })
+                .catch(err => console.error("Error purchasing theme:", err));
         }
 
         function setTheme(themeName) {
@@ -133,12 +152,13 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ theme: themeName })
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) location.reload();
-            })
-            .catch(err => console.error("Error setting theme:", err));
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                })
+                .catch(err => console.error("Error setting theme:", err));
         }
     </script>
 </body>
+
 </html>
