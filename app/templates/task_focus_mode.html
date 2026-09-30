@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Task Focus Mode</title>
+    <title> Task Focus Mode</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -26,6 +26,15 @@
             Status: <span id="status">{{ task.status }}</span>
         </p>
 
+        <!-- Show the number of interruptions during this task. -->
+        <p class="focus-interruptions">
+            Interruptions: <span id="interruptionCount">0</span>
+        </p>
+
+        <!-- Show the total time spent away from Focus Mode. -->
+        <p class="focus-interruption-time">
+            Interruption Time: <span id="interruptionTime">0 seconds</span>
+        </p>
         <div class="focus-actions">
 
             <button id="startButton" type="button">Start</button>
@@ -47,6 +56,7 @@
         </a>
 
     </main>
+
 
     <script>
 
@@ -71,6 +81,10 @@
         const status = document.getElementById("status");
         const endButton = document.getElementById("endButton");
 
+        // Store the ID of the current interruption record.
+        let currentInterruptionId = null;
+
+
         // Update the timer display.
         function updateTimer() {
 
@@ -82,24 +96,33 @@
                 String(seconds).padStart(2, "0");
         }
 
+
         // Start the task timer.
-        startButton.addEventListener("click", function () {
+        function startTimer() {
 
             // Do not start another timer if one is already running.
             if (timerInterval !== null) {
                 return;
             }
 
+            // Do not start the timer if there is no time left.
+            if (timeLeft <= 0) {
+                return;
+            }
+
+            // Update the task status.
             status.textContent = "ongoing";
 
+            // Start counting down every second.
             timerInterval = setInterval(function () {
 
                 if (timeLeft > 0) {
 
+                    // Remove one second from the remaining time.
                     timeLeft--;
+
+                    // Update the timer display.
                     updateTimer();
-
-
 
                 } else {
 
@@ -107,7 +130,7 @@
                     clearInterval(timerInterval);
                     timerInterval = null;
 
-                    // Automatically complete the task when the timer reaches zero.
+                    // Automatically complete the task.
                     fetch("{{ url_for('complete_task', task_id=task.id) }}", {
                         method: "POST"
                     }).then(function () {
@@ -116,15 +139,27 @@
                         window.location.href = "{{ url_for('view_tasks') }}";
 
                     });
-
                 }
 
             }, 1000);
+        }
+
+
+        // Start the task when the Start button is clicked.
+        startButton.addEventListener("click", function () {
+
+            startTimer();
 
         });
 
+
         // Pause the task timer.
         pauseButton.addEventListener("click", function () {
+
+            // Only pause if the timer is currently running.
+            if (timerInterval === null) {
+                return;
+            }
 
             // Stop the timer.
             clearInterval(timerInterval);
@@ -147,20 +182,125 @@
 
         });
 
-        // Complete the task.
+
+        // Complete the task manually.
         endButton.addEventListener("click", function () {
 
+            // Stop the timer.
             clearInterval(timerInterval);
             timerInterval = null;
 
+            // Update the status on the page.
             status.textContent = "completed";
 
         });
 
+
         // Show the correct starting time when the page loads.
         updateTimer();
 
+
+        // Get the interruption information from the database.
+        fetch("{{ url_for('get_interruptions', task_id=task.id) }}")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+
+                // Show the number of interruptions.
+                document.getElementById("interruptionCount").textContent =
+                    data.count;
+
+                // Show the total interruption time.
+                document.getElementById("interruptionTime").textContent =
+                    data.total_seconds + " seconds";
+
+            });
+
+
+        // Detect when the user leaves or returns to the Focus Mode page.
+        document.addEventListener("visibilitychange", function () {
+
+            // --------------------------------------------------
+            // USER LEAVES FOCUS MODE
+            // --------------------------------------------------
+
+            if (document.hidden && timerInterval !== null) {
+
+                // Stop the timer while the user is away.
+                clearInterval(timerInterval);
+                timerInterval = null;
+
+                // Start an interruption record.
+                fetch("{{ url_for('start_interruption', task_id=task.id) }}", {
+                    method: "POST"
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+
+                        // Save the interruption ID.
+                        currentInterruptionId = data.interruption_id;
+
+                    });
+
+            }
+
+
+            // --------------------------------------------------
+            // USER RETURNS TO FOCUS MODE
+            // --------------------------------------------------
+
+            if (!document.hidden && currentInterruptionId !== null) {
+
+                // End the interruption record.
+                fetch(
+                    "{{ url_for('end_interruption', task_id=task.id, record_id=0) }}"
+                        .replace(
+                            "/0/end",
+                            "/" + currentInterruptionId + "/end"
+                        ),
+                    {
+                        method: "POST"
+                    }
+                )
+                    .then(function () {
+
+                        // Clear the current interruption ID.
+                        currentInterruptionId = null;
+
+                        // Update the interruption information.
+                        return fetch(
+                            "{{ url_for('get_interruptions', task_id=task.id) }}"
+                        );
+
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+
+                        // Update the interruption count.
+                        document.getElementById("interruptionCount").textContent =
+                            data.count;
+
+                        // Update the total interruption time.
+                        document.getElementById("interruptionTime").textContent =
+                            data.total_seconds + " seconds";
+
+                    });
+
+
+                // Continue the timer after the user returns.
+                startTimer();
+
+            }
+
+        });
+
     </script>
+
 
 </body>
 
