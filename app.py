@@ -704,6 +704,9 @@ def complete_task(task_id):
     # Find the task.
     task = Task.query.get_or_404(task_id)
 
+    # Check if the task was already completed.
+    was_completed = task.status == "completed"
+
     # Mark the task as completed.
     task.status = "completed"
 
@@ -712,6 +715,38 @@ def complete_task(task_id):
 
     # Set the remaining time to zero.
     task.remaining_time = 0
+
+    # Check if all tasks in this study session are now completed.
+    session = task.study_session
+
+    total_tasks = len(session.tasks)
+    completed_tasks = sum(
+        1 for session_task in session.tasks
+        if session_task.status == "completed"
+    )
+
+    # Reward 50 FocusCoins when the session reaches 100%.
+    if (
+        not was_completed
+        and total_tasks > 0
+        and completed_tasks == total_tasks
+    ):
+        reward = min(50, max(0, 200 - current_user.coins))
+        current_user.coins += reward
+
+        # Record the FocusCoin reward.
+        new_record = FocusCoin(
+            user_id=current_user.id,
+            amount=reward,
+            reason="Completed study session"
+        )
+        db.session.add(new_record)
+
+        # Update the user's study streak.
+        update_user_streak(current_user.id)
+
+        # Check if completing this session unlocks an achievement.
+        check_and_award_achievements(current_user.id)
 
     # Save the changes to the database.
     db.session.commit()
@@ -749,8 +784,37 @@ def update_task_status(task_id, status):
     if status == "upcoming" and task.status == "completed":
         task.remaining_time = task.duration * 60
 
+    was_completed = task.status == "completed"
     task.status = status
     task.completed = status == "completed"
+
+    # Check if all tasks in this study session are now completed.
+    session = task.study_session
+
+    total_tasks = len(session.tasks)
+    completed_tasks = sum(
+        1 for session_task in session.tasks
+        if session_task.status == "completed"
+    )
+    # Reward 50 FocusCoins when the session reaches 100%.
+    if (
+        status == "completed"
+        and not was_completed
+        and total_tasks > 0
+        and completed_tasks == total_tasks
+    ):
+        reward = min(50, max(0, 200 - current_user.coins))
+        current_user.coins += reward
+
+        # Record the FocusCoin reward.
+        new_record = FocusCoin(
+            user_id=current_user.id,
+            amount=reward,
+            reason="Completed study session"
+        )
+        db.session.add(new_record)
+        # Check if completing this session unlocks an achievement.
+        check_and_award_achievements(current_user.id)
 
     db.session.commit()
 
