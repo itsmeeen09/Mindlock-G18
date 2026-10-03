@@ -359,7 +359,7 @@ def register():
         db.session.commit()
 
         login_user(new_user)
-        return redirect(url_for('timer'))
+        return redirect(url_for('study_home'))
 
     return render_template('register.html')
 
@@ -367,7 +367,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email = request.form.get('email', '').strip()
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
